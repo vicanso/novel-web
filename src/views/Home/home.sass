@@ -1,0 +1,53 @@
+@import '@/styles/const.sass'
+
+.homeWrapper
+  padding-bottom: $MAIN_NAV_HEIGHT
+
+.bannerWrapper
+  height: 130px
+
+.mainNav
+  background-color: #fff
+  border-top: $GRAY_BORDER
+  position: absolute
+  left: 0
+  bottom: 0
+  right: 0
+  display: flex
+  a
+    flex: 1
+    padding-top: 3px 
+    font-size: 12px
+    line-height: 18px
+    text-align: center
+    color: $COLOR_DARK_GRAY
+    text-decoration: none
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+    touch-action: manipulation
+    &.active
+      color: $COLOR_BLUE
+      background-color: $COLOR_DARY_WHITE
+    .iconfont
+      font-size: 20px
+      padding: 4px 0 6px 0
+
+.galleryWrapper
+  ul
+    line-height: 45px
+    text-align: center
+    width: 80px
+    margin: 0
+    padding: 0
+    list-style: none 
+    background-color: rgba($COLOR_GRAY, 0.1)
+    a
+      text-decoration: none
+      color: $COLOR_BLACK
+    li
+      padding-left: 3px
+    li.active
+      padding-left: 0
+      border-left: 3px solid $COLOR_BLUE
+      background-color: $COLOR_WHITE
+      a
+        color: $COLOR_BLUE
