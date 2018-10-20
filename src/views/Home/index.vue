@@ -35,6 +35,7 @@ mixin BookHot
       BookView.booView(
         v-for="item in bookTodayRecommend"
         :key="item.id"
+        :id="item.id"
         :name="item.name"
         :author="item.author"
         :brief="item.brief"
@@ -54,6 +55,7 @@ mixin BookHot
       BookView.booView(
         v-for="item in bookLatestPopu"
         :key="item.id"
+        :id="item.id"
         :name="item.name"
         :author="item.author"
         :brief="item.brief"
@@ -83,6 +85,7 @@ mixin BookGallery
           :key="item.id"
         )
           BookView(
+            :id="item.id"
             :name="item.name"
             :author="item.author"
             :brief="item.brief"

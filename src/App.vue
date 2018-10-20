@@ -1,15 +1,20 @@
 <template lang="pug">
 #app
+  Home.mainView
   transition
-    router-view
+    router-view.childView
 </template>
 <style lang="sass" src="@/styles/app.sass"></style>
 
 <script>
+import Home from "@/views/Home";
 import { mapActions, mapState } from "vuex";
 
 export default {
   name: "app",
+  components: {
+    Home
+  },
   data() {
     return {
       account: ""

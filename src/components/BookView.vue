@@ -1,5 +1,7 @@
 <template lang="pug">
-.bookView
+.bookView(
+  @click="showDetail"
+)
   .cover.pullLeft
     ImageView(
       v-if="coverUrl"
@@ -78,6 +80,8 @@ $coverWidth: 80px
 
 <script>
 import ImageView from "@/components/ImageView";
+import { routeDetail } from "@/routes";
+import { getCover } from "@/helpers/util";
 
 const ignoreCategory = ["今日必读"];
 
@@ -87,6 +91,10 @@ export default {
     ImageView
   },
   props: {
+    id: {
+      type: Number,
+      required: true
+    },
     name: {
       type: String,
       required: true
@@ -140,7 +148,17 @@ export default {
     if (!cover) {
       return;
     }
-    this.coverUrl = `http://red:8080/api/images/v1/${cover}-90-0-${coverHeight}.jpeg`;
+    this.coverUrl = getCover(cover, coverHeight);
+  },
+  methods: {
+    showDetail() {
+      this.$router.push({
+        name: routeDetail,
+        params: {
+          id: this.id
+        }
+      });
+    }
   }
 };
 </script>

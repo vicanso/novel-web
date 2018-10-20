@@ -8,3 +8,5 @@ export const urlPrefix = "/@nv";
 
 // default timeout
 export const timeout = 10 * 1000;
+
+export const coverUrlPrefix = "http://red:8080/api/images/v1";

@@ -27,6 +27,18 @@ body, html, #app, .fullHeight
   height: 100%
   overflow: auto
   -webkit-overflow-scrolling: touch
+.mainView, .childView
+  background-color: $COLOR_DARY_WHITE
+  position: absolute 
+  left: 0
+  top: 0
+  right: 0
+  height: 100%
+.childView
+  z-index: 1
+// 由于childView调整了z-index，因此需要调整loading的index
+.mint-indicator-wrapper, .mint-indicator-mask
+  z-index: 1
 
 .pullRight
   float: right
@@ -53,3 +65,15 @@ body, html, #app, .fullHeight
 .loading
   padding: 20px 0
   text-align: center
+
+// main header bar
+.mainHeader
+  height: $MAIN_HEADER_HEIGHT !important
+  box-sizing: content-box
+  padding: 0
+.mainHeaderBack
+  display: inline-block
+  width: 50px
+  padding-left: 15px
+  height: $MAIN_HEADER_HEIGHT
+  line-height: $MAIN_HEADER_HEIGHT

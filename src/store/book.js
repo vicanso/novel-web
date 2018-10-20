@@ -1,6 +1,12 @@
 import request from "axios";
-import { BOOKS, BOOKS_CATEGORIES, BOOKS_USER_ACTIONS } from "@/urls";
 import {
+  BOOKS,
+  BOOKS_CATEGORIES,
+  BOOKS_USER_ACTIONS,
+  BOOKS_DETAIL
+} from "@/urls";
+import {
+  BOOK_DETAIL,
   BOOK_LIST,
   BOOK_CATEGORY,
   BOOK_LIST_TODAY_RECOMMEND,
@@ -16,6 +22,7 @@ var currentKeyword = "";
 
 const state = {
   book: {
+    detail: null,
     list: null,
     count: 0,
     categories: null,
@@ -134,7 +141,14 @@ const bookClearSearchResult = async ({ commit }) => {
   commit(BOOK_SEARCH_RESULT, null);
 };
 
+const bookGetDetail = async ({ commit }, { id }) => {
+  const res = await request.get(BOOKS_DETAIL.replace(":id", id));
+  commit(BOOK_DETAIL, res.data.book);
+  return res;
+};
+
 const actions = {
+  bookGetDetail,
   bookList,
   bookCacheRemove,
   bookListTodayRecommend,
@@ -179,6 +193,9 @@ const mutations = {
   },
   [BOOK_SEARCH_RESULT](state, data) {
     state.book.searchResult = data;
+  },
+  [BOOK_DETAIL](state, data) {
+    state.book.detail = data;
   }
 };
 

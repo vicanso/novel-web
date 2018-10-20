@@ -1,5 +1,5 @@
 import { isError, map } from "lodash-es";
-import { env } from "@/config";
+import { env, coverUrlPrefix } from "@/config";
 export function log(...args) {
   // eslint-disable-next-line
   console.info(...args);
@@ -107,4 +107,8 @@ export function waitfor(ms) {
     }
     return new Promise(resolve => setTimeout(resolve, delay));
   };
+}
+
+export function getCover(cover, height) {
+  return `${coverUrlPrefix}/${cover}-90-0-${height}.jpeg`;
 }
