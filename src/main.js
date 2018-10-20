@@ -1,3 +1,4 @@
+import "intersection-observer";
 import Vue from "vue";
 import App from "@/App.vue";
 import router from "@/router";
@@ -5,10 +6,11 @@ import store from "@/store";
 import Mint from "mint-ui";
 import "@/styles/index.scss";
 import "@/request-interceptors";
-import { getErrorMessage } from "@/helpers/util";
+import { getErrorMessage, isDevelopment } from "@/helpers/util";
 import { timeout } from "@/config";
 
 import "@/assets/iconfont/iconfont.css";
+import "@/directive";
 
 Vue.use(Mint);
 
@@ -44,6 +46,13 @@ Vue.prototype.xError = function xError(err) {
     message: message,
     duration: 5000
   });
+  if (isDevelopment()) {
+    throw err;
+  }
+};
+
+Vue.prototype.$next = function nextTickPromise() {
+  return new Promise(resolve => this.$nextTick(resolve));
 };
 
 Vue.config.productionTip = false;

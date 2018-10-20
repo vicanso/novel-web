@@ -3,8 +3,6 @@
 .homeWrapper
   padding-bottom: $MAIN_NAV_HEIGHT
 
-.bannerWrapper
-  height: 130px
 
 .mainNav
   background-color: #fff
@@ -31,11 +29,28 @@
       font-size: 20px
       padding: 4px 0 6px 0
 
+.hotWrapper
+  .bannerWrapper
+    height: 130px
+    margin-bottom: 10px
+  .hotList
+    background-color: $COLOR_WHITE
+    padding-top: 10px
+    margin-bottom: 10px
+    h3
+      margin: 0 0 0 10px
+      padding: 0
+      line-height: 2em
+      font-size: 16px
+    .booView
+      border-bottom: $GRAY_BORDER
+
 .galleryWrapper
-  ul
+  $categoryWidth: 90px
+  .categories
     line-height: 45px
     text-align: center
-    width: 80px
+    width: $categoryWidth
     margin: 0
     padding: 0
     list-style: none 
@@ -51,3 +66,22 @@
       background-color: $COLOR_WHITE
       a
         color: $COLOR_BLUE
+  .books
+    margin-left: $categoryWidth
+    background-color: rgba($COLOR_GRAY, 0.1)
+    ul
+      margin: 0
+      padding: 0
+      list-style: none
+      li
+        background-color: $COLOR_WHITE
+        margin-bottom: 10px
+        &:last-child
+          margin-bottom: 0
+
+.searchWrapper
+  .searching
+    position: absolute
+    left: 0
+    right: 0
+    top: 50px

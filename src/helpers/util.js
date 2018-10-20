@@ -1,12 +1,16 @@
-import { isError } from "lodash-es";
+import { isError, map } from "lodash-es";
 import { env } from "@/config";
 export function log(...args) {
   // eslint-disable-next-line
   console.info(...args);
 }
 
+export function isDevelopment() {
+  return env == "development";
+}
+
 export function debug(...args) {
-  if (env !== "development") {
+  if (!isDevelopment()) {
     return;
   }
   // eslint-disable-next-line
@@ -65,4 +69,42 @@ export function copy(value) {
   input.setSelectionRange(0, 9999);
   document.execCommand("copy");
   document.body.removeChild(input);
+}
+
+let isSupportWebp = false;
+(function() {
+  const images = {
+    basic:
+      "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAACyAgCdASoCAAEALmk0mk0iIiIiIgBoSygABc6zbAAA/v56QAAAAA==",
+    lossless:
+      "data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAQAAAAfQ//73v/+BiOh/AAA="
+  };
+  const check = data =>
+    new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = data;
+    });
+  Promise.all(map(images, check))
+    .then(() => true)
+    .catch(() => false)
+    .then(result => {
+      isSupportWebp = result;
+    });
+})();
+
+export function supportWebp() {
+  return isSupportWebp;
+}
+
+export function waitfor(ms) {
+  const start = Date.now();
+  return () => {
+    const delay = ms - (Date.now() - start);
+    if (delay < 0) {
+      return;
+    }
+    return new Promise(resolve => setTimeout(resolve, delay));
+  };
 }

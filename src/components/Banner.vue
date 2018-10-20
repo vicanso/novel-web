@@ -3,8 +3,9 @@
   ref="banner"
   :style="style"
 )
-  img.img.pullLeft(
+  ImageView.pullLeft(
     v-for="item in images"
+    :key="item"
     :src="item"
   )
   .dots
@@ -19,8 +20,6 @@
 .banner
   height: 100%
   position: relative
-.img
-  display: block
 .dots
   position: absolute
   left: 10px
@@ -37,7 +36,11 @@
 </style>
 
 <script>
+import ImageView from "@/components/ImageView";
 export default {
+  components: {
+    ImageView
+  },
   name: "banner",
   props: {
     ids: Array

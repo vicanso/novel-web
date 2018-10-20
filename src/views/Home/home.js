@@ -1,5 +1,6 @@
 import { mapActions, mapState } from "vuex";
 import Banner from "@/components/Banner";
+import BookView from "@/components/BookView";
 
 const functions = {
   shelf: 'shelf',
@@ -12,6 +13,7 @@ export default {
   name: 'home',
   components: {
     Banner,
+    BookView,
   },
   computed: {
     ...mapState({
@@ -28,7 +30,10 @@ export default {
         return result.sort((k1, k2) => {
           return categories[k2] - categories[k1];
         });
-      }
+      },
+      bookTodayRecommend: ({ book }) => book.todayRecommend,
+      bookLatestPopu: ({ book }) => book.latestPopu,
+      bookSearchResult: ({ book }) => book.searchResult,
     })
   },
   data() {
@@ -68,54 +73,150 @@ export default {
         "author",
         "brief",
         "cover",
+        "wordCount",
       ].join(","),
-      currentPage: 1,
+      hotFields: [
+        "id",
+        "name",
+        "author",
+        "brief",
+        "cover",
+        "wordCount",
+        "category",
+      ].join(","),
       order: "-updatedAt",
       offset: 0,
       limit: 10,
+      loadDone: false,
+      loading: false,
+      keyword: "",
+      searchBooks: null,
     };
   },
   methods: {
     ...mapActions([
       "bookList",
       "bookListCategory",
+      "bookListTodayRecommend",
+      "bookListLatestPopu",
       "bookCacheRemove",
+      "bookUserAction",
+      "bookClearSearchResult",
+      "bookSearch",
     ]),
     activeNav({id}) {
+      if (id === functions.find) {
+        this.keyword = "";
+      }
       this.currentNav = id;
     },
     reset() {
       this.bookCacheRemove();
+      this.loadDone = false;
       this.offset = 0;
-      this.currentPage = 1;
     },
     async fetch() {
       const { field, order, offset, limit } = this;
-      const close = this.xLoading();
+      this.loading = true;
       try {
         const params = {
           field,
           order,
           offset,
           limit,
-          // status: 2,
+          status: 2,
         };
+        const category = this.bookCategories[this.currentCatgory];
+        if (!category) {
+          throw new Error('获取失败分类');
+        }
+        params.category = category;
         await this.bookList(params);
+        this.offset = offset + limit;
+        if (this.books.length >= this.bookCount) {
+          this.loadDone = true;
+        }
       } catch (err) {
         this.xError(err);
       } finally {
-        close();
+        this.loading = false;
       }
     },
     async changeCatgeory(index) {
       this.currentCatgory = index;
+      this.reset();
+      await this.fetch(); 
+    },
+    initLoadmoreEvent() {
+      const {
+        loadingMore,
+      } = this.$refs;
+      const io = new IntersectionObserver(entries => {
+        if (this.loading) {
+          return;
+        }
+        const target = entries[0];
+        // 在元素可见时加载图标，并做diconnect
+        if (target.isIntersecting) {
+          this.fetch();
+        }
+      });
+      io.observe(loadingMore);
+    },
+    async listTodayRecommend() {
+      const {
+        order,
+        hotFields,
+      } = this;
+      try {
+        await this.bookListTodayRecommend({
+          limit: 3,
+          order,
+          field: hotFields,
+        });
+      } catch (err) {
+        this.xError(err);
+      }
+    },
+    async listLatestPopu() {
+      const {
+        hotFields,
+      } = this;
+      try {
+        await this.bookListLatestPopu({
+        limit: 5,
+        order: "latestViewCount",
+        field: hotFields,
+        });
+      } catch (err) {
+        this.xError(err);
+      }
+    }
+  },
+  watch: {
+    async keyword(v) {
+      if (!v) {
+        this.bookClearSearchResult();
+        return;
+      }
+      try {
+        this.bookSearch({
+          field: 'name,author,id',
+          limit: 5,
+          keyword: v,
+          order: this.order,
+        });
+      } catch (err) {
+        this.xError(err);
+      }
     },
   },
   async beforeMount() {
     const close = this.xLoading();
     try {
       await this.bookListCategory();
-      await this.fetch();
+      this.fetch();
+      this.initLoadmoreEvent();
     } catch (err) {
       this.xError(err);
     } finally {
