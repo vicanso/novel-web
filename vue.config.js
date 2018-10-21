@@ -2,7 +2,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/@nv": {
-        target: "http://red:3015",
+        target: "http://jenny.f3322.net:3015",
         changeOrigin: true
       }
     }

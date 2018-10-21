@@ -1,12 +1,12 @@
 import request from "axios";
 import {
   BOOKS,
+  BOOKS_RECOMMEND_BY_ID,
   BOOKS_CATEGORIES,
   BOOKS_USER_ACTIONS,
   BOOKS_DETAIL
 } from "@/urls";
 import {
-  BOOK_DETAIL,
   BOOK_LIST,
   BOOK_CATEGORY,
   BOOK_LIST_TODAY_RECOMMEND,
@@ -141,9 +141,23 @@ const bookClearSearchResult = async ({ commit }) => {
   commit(BOOK_SEARCH_RESULT, null);
 };
 
-const bookGetDetail = async ({ commit }, { id }) => {
+const bookGetDetail = async (tmp, { id }) => {
   const res = await request.get(BOOKS_DETAIL.replace(":id", id));
-  commit(BOOK_DETAIL, res.data.book);
+  return res;
+};
+
+// bookGetRecommend get recommend
+const bookGetRecommend = async (tmp, { id, limit, field, order }) => {
+  const url = BOOKS_RECOMMEND_BY_ID.replace(":id", id);
+  const res = await request.get(url, {
+    params: {
+      status: statusPassed,
+      offset: 0,
+      limit,
+      field,
+      order
+    }
+  });
   return res;
 };
 
@@ -156,6 +170,7 @@ const actions = {
   bookListLatestPopu,
   bookSearch,
   bookClearSearchResult,
+  bookGetRecommend,
   bookUserAction
 };
 
@@ -193,9 +208,6 @@ const mutations = {
   },
   [BOOK_SEARCH_RESULT](state, data) {
     state.book.searchResult = data;
-  },
-  [BOOK_DETAIL](state, data) {
-    state.book.detail = data;
   }
 };
 

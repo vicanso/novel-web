@@ -43,6 +43,9 @@ export function getErrorMessage(err) {
 
 // formatDate
 export function formatDate(str) {
+  if (!str) {
+    return "";
+  }
   const date = new Date(str);
   const fill = v => {
     if (v >= 10) {
