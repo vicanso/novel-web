@@ -3,6 +3,7 @@ import {
   BOOKS,
   BOOKS_RECOMMEND_BY_ID,
   BOOKS_CATEGORIES,
+  BOOKS_CHAPTERS,
   BOOKS_USER_ACTIONS,
   BOOKS_DETAIL
 } from "@/urls";
@@ -13,6 +14,12 @@ import {
   BOOK_SEARCH_RESULT,
   BOOK_LIST_LATEST_POPU
 } from "@/store/types";
+
+import {
+  ChapterCache,
+  BookReadInfo,
+  getStoreChapterIndexList
+} from "@/helpers/storage";
 
 import { formatDate } from "@/helpers/util";
 
@@ -161,6 +168,107 @@ const bookGetRecommend = async (tmp, { id, limit, field, order }) => {
   return res;
 };
 
+const bookGetChapters = async (tmp, { id, limit, offset, field, order }) => {
+  const url = BOOKS_CHAPTERS.replace(":id", id);
+  const res = await request.get(url, {
+    params: {
+      limit,
+      offset,
+      field,
+      order
+    }
+  });
+  return res;
+};
+
+const getChapters = async (id, offset, limit) => {
+  const url = BOOKS_CHAPTERS.replace(":id", id);
+  return request.get(url, {
+    params: {
+      limit,
+      offset,
+      field: "title,content",
+      order: "index"
+    }
+  });
+};
+
+const bookGetChapterContent = async (tmp, { id, no }) => {
+  const c = new ChapterCache(id);
+  const data = await c.get(no);
+  if (data) {
+    return data;
+  }
+  const limit = 10;
+  let offset = Math.floor(no / limit) * limit;
+  const res = await getChapters(id, offset, limit);
+  const { chapters } = res.data;
+  chapters.forEach((item, index) => {
+    c.add(offset + index, item);
+  });
+  return chapters[no - offset];
+};
+
+const bookDownload = async (tmp, { id, max }) => {
+  const limit = 20;
+  const arr = [];
+  for (let index = 0; index < Math.ceil(max / limit); index++) {
+    arr.push(index);
+  }
+  const storeIndexList = await getStoreChapterIndexList(id);
+  const dict = {};
+  storeIndexList.forEach(v => {
+    dict[v] = true;
+  });
+  const c = new ChapterCache(id);
+  return Promise.map(
+    arr,
+    async i => {
+      const offset = i * limit;
+      let found = false;
+      for (let index = 0; index < limit; index++) {
+        if (found) {
+          break;
+        }
+        const v = Math.min(index + offset, max - 1);
+        // 如果发现有章节未下载
+        if (!dict[v]) {
+          found = true;
+        }
+      }
+      // 如果未发现未下载章节，则无需下载
+      if (!found) {
+        return;
+      }
+      const res = await getChapters(id, offset, limit);
+      const { chapters } = res.data;
+      chapters.forEach((item, index) => {
+        c.add(offset + index, item);
+      });
+    },
+    {
+      concurrency: 1
+    }
+  );
+};
+
+// 获取缓存的章节序号
+const bookGetStoreChapterIndexes = async (tmp, { id }) => {
+  return await getStoreChapterIndexList(id);
+};
+
+// bookGetReadInfo 获取当前阅读信息（阅读至第几章，开始阅读时间，最新阅读时间）
+const bookGetReadInfo = async (tmp, { id }) => {
+  const b = new BookReadInfo(id);
+  return await b.get();
+};
+
+// bookUpdateReadInfo 更新当前阅读信息
+const bookUpdateReadInfo = async (tmp, { id, no, page }) => {
+  const b = new BookReadInfo(id);
+  await b.update(no, page);
+};
+
 const actions = {
   bookGetDetail,
   bookList,
@@ -171,6 +279,12 @@ const actions = {
   bookSearch,
   bookClearSearchResult,
   bookGetRecommend,
+  bookGetChapters,
+  bookGetChapterContent,
+  bookDownload,
+  bookGetStoreChapterIndexes,
+  bookGetReadInfo,
+  bookUpdateReadInfo,
   bookUserAction
 };
 

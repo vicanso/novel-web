@@ -18,6 +18,7 @@ mixin MainNav
 mixin Banner
   .bannerWrapper
     Banner(
+      v-if="banners"
       :ids="banners"
     )
 mixin BookHot

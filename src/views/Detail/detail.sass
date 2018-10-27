@@ -1,5 +1,9 @@
 @import '@/styles/const.sass'
 
+
+.mainView
+  .refresh
+    font-weight: 600
 .contentWrapper
   padding-bottom: $MAIN_HEADER_HEIGHT
   padding-top: $MAIN_HEADER_HEIGHT
@@ -30,6 +34,7 @@
   .chapters
     line-height: 2em
     padding: 5px 15px
+    border-bottom: $GRAY_BORDER
     span, i
       color: $COLOR_GRAY
 .recommends
@@ -71,3 +76,43 @@
       font-size: 12px
       line-height: 20px
     
+.chaptersView
+  .chaptersWrapper
+    padding-top: $MAIN_HEADER_HEIGHT
+  .chapterSection
+    margin: 0
+    padding: 10px
+    padding-bottom: 0
+    list-style: none
+    li
+      display: inline-block
+      padding: 3px 10px
+      border: $GRAY_BORDER
+      border-radius: 10px
+      background-color: $COLOR_WHITE
+      margin: 0 10px 10px 0
+      &.sortBy
+        padding: 3px 15px
+      a
+        text-decoration: none
+        color: $COLOR_DARK_BLUE
+        line-height: 20px
+        display: block
+        &.active
+          color: $COLOR_BLUE
+  .chapters
+    margin: 0
+    padding: 0
+    list-style: none
+    li
+      border: $GRAY_BORDER
+      &:nth-child(odd)
+        background-color: $COLOR_WHITE
+      a
+        display: block
+        padding: 10px 0 10px 15px
+        text-decoration: none
+        color: $COLOR_DARK_GRAY
+        span
+          color: $COLOR_DARK_BLUE
+          margin-right: 10px

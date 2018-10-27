@@ -1,5 +1,9 @@
+import FontMetrics from "web-font-metrics";
 import { isError, map } from "lodash-es";
 import { env, coverUrlPrefix } from "@/config";
+
+let currentFontMetrics = null;
+
 export function log(...args) {
   // eslint-disable-next-line
   console.info(...args);
@@ -114,4 +118,20 @@ export function waitfor(ms) {
 
 export function getCover(cover, height) {
   return `${coverUrlPrefix}/${cover}-90-0-${height}.jpeg`;
+}
+
+// getFontMetrics get font metrics instance
+export function getFontMetrics(options) {
+  const key = JSON.stringify(options);
+  // 相关配置如果不变，font metrics可以重复使用，
+  // 避免每次重新计算文本宽度
+  if (currentFontMetrics && currentFontMetrics.key === key) {
+    return currentFontMetrics.ins;
+  }
+  const fontMetrics = new FontMetrics(options);
+  currentFontMetrics = {
+    key,
+    ins: fontMetrics
+  };
+  return fontMetrics;
 }

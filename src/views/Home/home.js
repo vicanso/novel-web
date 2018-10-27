@@ -38,10 +38,7 @@ export default {
   },
   data() {
     return {
-      banners: [
-        '01CSRYT09Z31MXY7GG640T9PR2',
-        '01CSRYSFXRB7T6W7NPMM2MF478'
-      ],
+      banners: null,
       functions,
       currentNav: functions.hot,
       currentCatgory: 0,
@@ -211,12 +208,16 @@ export default {
       }
     },
   },
-  async beforeMount() {
+  async mounted() {
     const close = this.xLoading();
     try {
       await this.bookListCategory();
       this.fetch();
       this.initLoadmoreEvent();
+      this.banners = [
+        '01CSRYT09Z31MXY7GG640T9PR2',
+        '01CSRYSFXRB7T6W7NPMM2MF478'
+      ];
     } catch (err) {
       this.xError(err);
     } finally {

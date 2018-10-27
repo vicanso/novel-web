@@ -1,3 +1,5 @@
+import bluebird from "bluebird";
+global.Promise = bluebird;
 import "intersection-observer";
 import Vue from "vue";
 import App from "@/App.vue";
@@ -8,6 +10,7 @@ import "@/styles/index.scss";
 import "@/request-interceptors";
 import { getErrorMessage, isDevelopment } from "@/helpers/util";
 import { timeout } from "@/config";
+import { clearChapterStoreExpired } from "@/helpers/storage";
 
 import "@/assets/iconfont/iconfont.css";
 import "@/directive";
@@ -20,19 +23,15 @@ Vue.$store = store;
 
 Vue.prototype.xLoading = (options = {}) => {
   const Indicator = Mint.Indicator;
-  // 延迟显示loading（有些处理很快就响应，不展示loading）
-  const delayTimer = setTimeout(() => {
-    Indicator.open({
-      text: "加载中...",
-      spinnerType: "fading-circle"
-    });
-  }, 50);
+  Indicator.open({
+    text: "加载中...",
+    spinnerType: "fading-circle"
+  });
   let resolved = false;
   const resolve = () => {
     if (resolved) {
       return;
     }
-    clearTimeout(delayTimer);
     resolved = true;
     Indicator.close();
   };
@@ -50,6 +49,12 @@ Vue.prototype.xError = function xError(err) {
     throw err;
   }
 };
+Vue.prototype.xToast = (message, ms = 3000) => {
+  Mint.Toast({
+    message,
+    duration: ms
+  });
+};
 
 Vue.prototype.$next = function nextTickPromise() {
   return new Promise(resolve => this.$nextTick(resolve));
@@ -62,3 +67,7 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount("#app");
+
+setTimeout(() => {
+  clearChapterStoreExpired();
+}, 5000);
