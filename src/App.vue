@@ -8,7 +8,7 @@
 
 <script>
 import Home from "@/views/Home";
-import { mapActions, mapState } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "app",
@@ -21,28 +21,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["userGetInfo"])
-  },
-  computed: {
-    ...mapState({
-      userInfo: ({ user }) => user.info
-    })
-  },
-  watch: {
-    userInfo(cur) {
-      let account = "";
-      if (cur) {
-        account = cur.account;
-      }
-      if (account != this.account) {
-        this.account = account;
-      }
-    }
+    ...mapActions(["userGetInfo", "userGetSetting"])
   },
   async beforeMount() {
     const close = this.xLoading();
     try {
       await this.userGetInfo();
+      await this.userGetSetting();
     } catch (err) {
       this.xError(err);
     } finally {

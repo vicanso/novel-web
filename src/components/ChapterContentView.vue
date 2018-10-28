@@ -108,10 +108,10 @@ mixin SettingFooter
 </style>
 
 <script>
+import { mapActions, mapState } from "vuex";
 import Hammer from "hammerjs";
 import { forEach } from "lodash";
 import { getFontMetrics } from "@/helpers/util";
-import { getUserSetting, saveUserSetting } from "@/helpers/storage";
 
 // 内容展示的padding
 const padding = 15;
@@ -121,7 +121,7 @@ const titleHeight = 30;
 const progressBarHeight = 20;
 // setting操作区
 const settingFunctionsArea = {
-  footerHeight: 50,
+  footerHeight: 110,
   top: 60,
   // 需要加载时计算
   bottom: 0
@@ -149,9 +149,13 @@ export default {
       pages: null,
       currentPage: 0,
       maxPage: 0,
-      isShowingSetting: false,
-      userSetting: null
+      isShowingSetting: false
     };
+  },
+  computed: {
+    ...mapState({
+      userSetting: ({ user }) => user.setting
+    })
   },
   watch: {
     currentPage(v) {
@@ -162,6 +166,15 @@ export default {
       } else if (v > this.maxPage) {
         // 切换至下一章
         index = 1;
+      }
+      const chapterNo = this.chapterNo + index;
+      if (chapterNo >= this.chapterCount) {
+        this.xToast("已是最后一页");
+        return;
+      }
+      if (chapterNo < 0) {
+        this.xToast("已是第一页");
+        return;
       }
       if (!index) {
         this.$emit("changePage", v);
@@ -182,6 +195,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["userSaveSetting"]),
     initEvent() {
       const { $el, $refs } = this;
       const { maxWidth } = this.getOptions();
@@ -331,10 +345,10 @@ export default {
       const pages = fontMetrics.getFillTextList(chapter.content);
       this.maxPage = pages.length;
       pages.unshift({
-        html: '<p class="tac">加载前一章</p>'
+        html: '<p class="tac">正在切换至上一章</p>'
       });
       pages.push({
-        html: '<p class="tac">加载后一章</p>'
+        html: '<p class="tac">正在切换至下一章</p>'
       });
       const maxZIndex = pages.length;
       pages.forEach((item, i) => {
@@ -353,7 +367,7 @@ export default {
     changeFontSize(v) {
       const { userSetting } = this;
       userSetting.fontSize += v;
-      saveUserSetting(userSetting);
+      this.userSaveSetting(userSetting);
       this.initPageContent();
     },
     changeTheme(name) {
@@ -362,12 +376,11 @@ export default {
         return;
       }
       userSetting.theme = name;
-      saveUserSetting(userSetting);
+      this.userSaveSetting(userSetting);
       this.initPageContent();
     }
   },
   async mounted() {
-    this.userSetting = getUserSetting();
     this.initPageContent();
     await this.$next();
     let chapterPage = 1;

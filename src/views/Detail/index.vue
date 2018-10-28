@@ -135,7 +135,9 @@ mixin ChaptersView
           | {{item.title}}
 
 mixin ReadChapterView
-  .fullHeight.readChapterView
+  .fullHeight.readChapterView(
+    :style="readChapterViewStyle"
+  )
     ChapterContentView(
       v-if="currentChapter"
       :chapter="currentChapter"

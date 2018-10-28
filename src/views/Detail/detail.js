@@ -1,4 +1,4 @@
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import ImageView from "@/components/ImageView";
 import BookView from "@/components/BookView";
 import ChapterContentView from "@/components/ChapterContentView";
@@ -56,6 +56,29 @@ export default {
     ImageView,
     BookView,
     ChapterContentView,
+  },
+  computed: {
+    ...mapState({
+      readChapterViewStyle: ({ user }) => {
+        if (!user.setting) {
+          return null;
+        }
+        const {
+          colors,
+          theme,
+        } = user.setting;
+        if (!colors || !theme) {
+          return null;
+        }
+        const v = colors[theme];
+        if (!v) {
+          return null;
+        }
+        return {
+          "backgroundColor": v.backgroundColor,
+        };
+      },
+    }),
   },
   watch: {
     detail(v) {

@@ -48,6 +48,7 @@ $coverWidth: 80px
     overflow: hidden
     color: $COLOR_DARK_GRAY
     text-overflow: ellipsis
+    word-break: break-all
   .otherInfos
     height: $lineHeight
     overflow: hidden

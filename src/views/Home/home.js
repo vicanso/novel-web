@@ -1,6 +1,7 @@
 import { mapActions, mapState } from "vuex";
 import Banner from "@/components/Banner";
 import BookView from "@/components/BookView";
+import { routeLogin, routeRegister } from "@/routes";
 
 const functions = {
   shelf: 'shelf',
@@ -34,6 +35,7 @@ export default {
       bookTodayRecommend: ({ book }) => book.todayRecommend,
       bookLatestPopu: ({ book }) => book.latestPopu,
       bookSearchResult: ({ book }) => book.searchResult,
+      userInfo: ({ user }) => user.info,
     })
   },
   data() {
@@ -188,6 +190,16 @@ export default {
       } catch (err) {
         this.xError(err);
       }
+    },
+    login() {
+      this.$router.push({
+        name: routeLogin,
+      });
+    },
+    register() {
+      this.$router.push({
+        name: routeRegister,
+      });
     }
   },
   watch: {

@@ -54,7 +54,7 @@ export default {
   },
   mounted() {
     const baseUrl =
-      "http://oidm8hv4x.qnssl.com/api/images/v1/center/:id-90-:w-:h.jpeg";
+      "http://tiny.aslant.site/api/images/v1/center/:id-90-:w-:h.jpeg";
     const dom = this.$refs.banner;
     const w = dom.clientWidth;
     const h = dom.clientHeight;

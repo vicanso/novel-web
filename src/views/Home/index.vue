@@ -127,11 +127,31 @@ mixin BookSearch
           title="无符合条件的书籍"
         )
 
+mixin BookShelf
+  .fullHeight.shelfWrapper(
+    v-show="currentNav === functions.shelf"
+    v-if="userInfo"
+  )
+    .tipsWrapper(
+      v-if="userInfo.anonymous"
+    )
+      .tips
+        i.iconfont.icon-creditlevel
+        | 您尚未登录，请先登录！
+      mt-button.login(
+        type="primary"
+        @click.native="login"
+      ) 登录
+      mt-button.register(
+        @click.native="register"
+      ) 注册
+
 .homeWrapper.fullHeight
   +MainNav
   +BookHot
   +BookGallery
   +BookSearch
+  +BookShelf
 </template>
 
 <style lang="sass" src="./home.sass" scoped></style>
