@@ -11,4 +11,4 @@ RUN cd /novel-web/web \
   && yarn cache clean \
   && yarn autoclean --force
 
-CMD ["node" "/novel-web/app"]
+CMD ["node", "/novel-web/app"]
