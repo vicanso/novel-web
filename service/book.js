@@ -1,9 +1,11 @@
-const request = require("axios");
+const axios = require("axios");
 const _ = require("lodash");
 const path = require("path");
 const pug = require("pug");
 const util = require("util");
 const fs = require("fs");
+
+const request = axios.create();
 
 const readFile = util.promisify(fs.readFile);
 const config = require("../config");
@@ -17,6 +19,11 @@ const defaultQuery = {
   field: ["id", "name", "author", "brief", "category", "updatedAt"].join(","),
   order: "-updatedAt"
 };
+
+request.interceptors.request.use(function(config) {
+  config.headers.Host = "papa.aslant.site";
+  return config;
+});
 
 function getUrl(key) {
   return config.getConfig("api.host") + config.getConfig(`api.${key}`);
