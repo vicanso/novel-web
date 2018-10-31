@@ -1,0 +1,5 @@
+api:
+  host: http://jenny.f3322.net:3015
+  books: /@nv/books/v1
+  book: /@nv/books/v1/:id
+  recommendBookById: /@nv/books/v1/recommends/:id

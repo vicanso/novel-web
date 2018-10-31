@@ -1,0 +1,12 @@
+sudo: false
+language: node_js
+
+services:
+  - docker
+
+script:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t novel-web .
+  - docker images
+  - docker tag novel-web $DOCKER_USERNAME/novel-web
+  - docker push $DOCKER_USERNAME/novel-web

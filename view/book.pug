@@ -1,0 +1,33 @@
+div
+  h3 #{book.name}
+  p 
+    span 作者：
+    | #{book.author}
+  p 
+    span 摘要：
+    | #{book.brief}
+  p
+    span 更新于：
+    | #{book.updatedAt}
+  p
+    span 最新章节：
+    | #{latestChapter && latestChapter.title}
+  p
+    span 类别：
+    | #{book.category.join(' ')}
+div
+  h1 精彩推荐
+  ul
+    each item in recommends 
+      li
+        a(href=`/detail/${item.id}`) 阅读
+        h3 #{item.name}
+        p 
+          span 作者：
+          | #{item.author}
+        p 
+          span 摘要：
+          | #{item.brief}
+        p
+          span 更新于：
+          | #{item.updatedAt}

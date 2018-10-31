@@ -10,6 +10,11 @@ mixin MainHeader
       @click="back"
     )
       i.mintui.mintui-back
+    a.refresh.mainHeaderFunction(
+      slot="right"
+      @click="refresh()"
+    )
+      i.iconfont.icon-refresh
 mixin SettingFooter
   .settingFooter(
     v-if="isShowingSetting"
@@ -159,29 +164,7 @@ export default {
   },
   watch: {
     currentPage(v) {
-      let index = 0;
-      if (v <= 0) {
-        // 切换至上一章
-        index = -1;
-      } else if (v > this.maxPage) {
-        // 切换至下一章
-        index = 1;
-      }
-      const chapterNo = this.chapterNo + index;
-      if (chapterNo >= this.chapterCount) {
-        this.xToast("已是最后一页");
-        return;
-      }
-      if (chapterNo < 0) {
-        this.xToast("已是第一页");
-        return;
-      }
-      if (!index) {
-        this.$emit("changePage", v);
-        return;
-      }
-      this.pages = null;
-      this.$emit("change", index);
+      this.checkToChangeChapter(v);
     },
     async chapterNo(newValue, oldValue) {
       this.initPageContent();
@@ -378,6 +361,34 @@ export default {
       userSetting.theme = name;
       this.userSaveSetting(userSetting);
       this.initPageContent();
+    },
+    checkToChangeChapter(page) {
+      let index = 0;
+      if (page <= 0) {
+        // 切换至上一章
+        index = -1;
+      } else if (page > this.maxPage) {
+        // 切换至下一章
+        index = 1;
+      }
+      const chapterNo = this.chapterNo + index;
+      if (chapterNo >= this.chapterCount) {
+        this.xToast("已是最后一页");
+        return;
+      }
+      if (chapterNo < 0) {
+        this.xToast("已是第一页");
+        return;
+      }
+      if (!index) {
+        this.$emit("changePage", page);
+        return;
+      }
+      this.pages = null;
+      this.$emit("change", index);
+    },
+    refresh() {
+      this.checkToChangeChapter(this.currentPage);
     }
   },
   async mounted() {

@@ -1,8 +1,8 @@
 const dev = "development";
-export const app = "tiny";
+export const app = "novel";
 
 // eslint-disable-next-line
-export const env = process.env.VUE_APP_ENV || dev;
+export const env = window.CONFIG.env || dev;
 
 export const urlPrefix = "/@nv";
 

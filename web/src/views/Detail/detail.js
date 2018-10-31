@@ -281,9 +281,6 @@ export default {
         view,
       } = this;
       const close = this.xLoading();
-      if (view !== readChapterView) {
-        this.view = readChapterView;
-      }
       try {
         const done = waitfor(300);
         const data = await this.bookGetChapterContent({
@@ -296,6 +293,9 @@ export default {
           page,
         });
         await done();
+        if (view !== readChapterView) {
+          this.view = readChapterView;
+        }
         this.currentChapter = data;
         this.currentChapterNo = no;
         this.currentChapterPage = page;

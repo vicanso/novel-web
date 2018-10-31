@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, width=device-width, height=device-height, viewport-fit=cover, user-scalable=no">
+    <meta name="keywords" content="小说,小说网,玄幻小说,武侠小说,都市小说,历史小说,网络小说">
+    <meta name="description" content="小说阅读,精彩小说,爬爬书屋"><meta name="robots" content="all"><meta name="googlebot" content="all"><meta name="baiduspider" content="all">
+    <title>爬爬书屋</title>
+    <script>
+      (function() {
+        window.CONFIG = {
+          "env": "development"
+        };
+        const pathname = location.pathname;
+        if (pathname === "/") {
+          return;
+        }
+        location.replace("/#" + pathname);
+      })();
+    </script>
+  </head>
+  <body>
+    <div style="display:none">
+      {{FILL_CONTENT}}
+    </div>
+    <noscript>
+      <p>由tree.xie于业务时间创作</p>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

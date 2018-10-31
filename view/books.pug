@@ -1,0 +1,16 @@
+div
+  h1 #{title}
+  ul
+    each item in books
+      li
+        a(href=`/detail/${item.id}`) 阅读
+        h3 #{item.name}
+        p 
+          span 作者：
+          | #{item.author}
+        p 
+          span 摘要：
+          | #{item.brief}
+        p
+          span 更新于：
+          | #{item.updatedAt}
