@@ -327,11 +327,19 @@ export default {
       });
       const pages = fontMetrics.getFillTextList(chapter.content);
       this.maxPage = pages.length;
+      let nextTips = "正在切换至下一章...";
+      if (this.chapterNo >= this.chapterCount - 1) {
+        nextTips = "已至最后一章，请耐心等待更新...";
+      }
+      let prevTips = "正在切换至上一章...";
+      if (this.chapterNo === 0) {
+        prevTips = "已至第一章";
+      }
       pages.unshift({
-        html: '<p class="tac">正在切换至上一章</p>'
+        html: `<p class="tac">${prevTips}</p>`
       });
       pages.push({
-        html: '<p class="tac">正在切换至下一章</p>'
+        html: `<p class="tac">${nextTips}</p>`
       });
       const maxZIndex = pages.length;
       pages.forEach((item, i) => {

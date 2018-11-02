@@ -91,9 +91,17 @@ mixin MainView
     a(
       href="javascript:;"
       @click="addToShelf()"
+      :class=`{
+        "favAdded": hasAdded()
+      }`
     )
-      i.iconfont.icon-pin
-      span 加入书架
+        i.iconfont.icon-pin
+        span(
+          v-if="!hasAdded() "
+        ) 加入书架
+        span(
+          v-else
+        ) 移除书架
 
 mixin ChaptersView
   .fullHeight.chaptersView

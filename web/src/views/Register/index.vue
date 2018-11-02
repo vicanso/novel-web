@@ -28,6 +28,9 @@
     @click.native="register"
     type="primary"
   ) 立即注册
+  mt-button.back(
+    @click.native="back"
+  ) 返回
 </template>
 
 <script src="./register.js"></script>

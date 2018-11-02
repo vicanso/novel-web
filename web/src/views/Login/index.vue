@@ -16,6 +16,9 @@
     @click.native="login"
     type="primary"
   ) 立即登录
+  mt-button.back(
+    @click.native="back"
+  ) 返回
 </template>
 
 <script src="./login.js"></script>

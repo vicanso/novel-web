@@ -48,5 +48,8 @@ export default {
         close();
       }
     },
+    back() {
+      this.$router.back();
+    }
   }
 };

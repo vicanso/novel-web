@@ -145,6 +145,23 @@ mixin BookShelf
       mt-button.register(
         @click.native="register"
       ) 注册
+    .books.fullHeightScroll(
+      v-else-if="bookFavs"
+    )
+      p.tac(
+        v-if="bookFavs.length === 0"
+      ) 您尚未收藏小说，请先收藏~
+      BookFavView.book(
+        v-for="item in bookFavs"
+        :key="item.id"
+        :id="item.id"
+        :name="item.name"
+        :author="item.author"
+        :cover="item.cover"
+        :latestChapter="item.latestChapter"
+        :readingChapter="item.readingChapter"
+      )
+        
 
 .homeWrapper.fullHeight
   +MainNav

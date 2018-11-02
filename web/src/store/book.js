@@ -5,6 +5,7 @@ import {
   BOOKS_CATEGORIES,
   BOOKS_CHAPTERS,
   BOOKS_USER_ACTIONS,
+  BOOKS_USER_FAVS,
   BOOKS_DETAIL
 } from "@/urls";
 import {
@@ -12,6 +13,7 @@ import {
   BOOK_CATEGORY,
   BOOK_LIST_TODAY_RECOMMEND,
   BOOK_SEARCH_RESULT,
+  BOOK_LIST_USER_FAV,
   BOOK_LIST_LATEST_POPU
 } from "@/store/types";
 
@@ -35,7 +37,8 @@ const state = {
     categories: null,
     todayRecommend: null,
     latestPopu: null,
-    searchResult: null
+    searchResult: null,
+    favs: null
   }
 };
 
@@ -187,7 +190,7 @@ const getChapters = async (id, offset, limit) => {
     params: {
       limit,
       offset,
-      field: "title,content",
+      field: "title,content,index",
       order: "index"
     }
   });
@@ -269,6 +272,28 @@ const bookUpdateReadInfo = async (tmp, { id, no, page }) => {
   await b.update(no, page);
 };
 
+// bookGetUserFavs 获取用户收藏
+const bookGetUserFavs = async ({ commit }) => {
+  const res = await request.get(BOOKS_USER_FAVS);
+  commit(BOOK_LIST_USER_FAV, res.data);
+};
+
+const bookToggleFav = async ({ commit }, { id, category }) => {
+  await request.post(BOOKS_USER_FAVS + "/" + id, {
+    category
+  });
+  await bookGetUserFavs({
+    commit,
+  });
+};
+
+// 更新收藏信息
+const bookFavUpdate = async(tmp, {id, readingChapter}) => {
+  await request.patch(BOOKS_USER_FAVS + "/" + id, {
+    readingChapter,
+  });
+}
+
 const actions = {
   bookGetDetail,
   bookList,
@@ -285,6 +310,9 @@ const actions = {
   bookGetStoreChapterIndexes,
   bookGetReadInfo,
   bookUpdateReadInfo,
+  bookGetUserFavs,
+  bookToggleFav,
+  bookFavUpdate,
   bookUserAction
 };
 
@@ -322,7 +350,10 @@ const mutations = {
   },
   [BOOK_SEARCH_RESULT](state, data) {
     state.book.searchResult = data;
-  }
+  },
+  [BOOK_LIST_USER_FAV](state, data) {
+    state.book.favs = data.favs;
+  },
 };
 
 export default {

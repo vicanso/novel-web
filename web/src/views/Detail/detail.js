@@ -9,6 +9,8 @@ import {
 } from "@/helpers/util";
 import {
   routeDetail,
+  routeHome,
+  routeLogin,
 } from "@/routes";
 
 const sectionChapterCount = 100
@@ -78,6 +80,8 @@ export default {
           "backgroundColor": v.backgroundColor,
         };
       },
+      userInfo: ({ user }) => user.info,
+      bookFavs: ({ book }) => book.favs,
     }),
   },
   watch: {
@@ -120,6 +124,8 @@ export default {
       "bookGetReadInfo",
       "bookUpdateReadInfo",
       "bookGetStoreChapterIndexes",
+      "bookToggleFav",
+      "bookFavUpdate",
       "bookDownload",
     ]),
     async load(id) {
@@ -173,8 +179,18 @@ export default {
       }
     },
     back(view) {
+      const {
+        $router,
+      } = this;
       if (!view) {
-        this.$router.back();
+        // 如果是直接打开的详情页，则跳转回首页
+        if (window.history.length <= 1) {
+          $router.push({
+            name: routeHome,
+          });
+        } else {
+          $router.back();
+        }
         return
       }
       this.view = view;
@@ -299,6 +315,12 @@ export default {
         this.currentChapter = data;
         this.currentChapterNo = no;
         this.currentChapterPage = page;
+        if (data.index) {
+          this.bookFavUpdate({
+            id,
+            readingChapter: data.index,
+          });
+        }
       } catch (err) {
         this.xError(err);
       } finally {
@@ -375,8 +397,46 @@ export default {
         close();
       }
     },
-    addToShelf() {
-      this.xToast("敬请期待");
+    async addToShelf() {
+      if (this.userInfo.anonymous) {
+        this.xToast("请先登录");
+        this.$router.push({
+          name: routeLogin,
+        });
+        return;
+      }
+      let category = 'add';
+      if (this.hasAdded()) {
+        category = 'remove';
+      }
+      const close = this.xLoading();
+      try {
+        await this.bookToggleFav({
+          id: this.id,
+          category,
+        });
+      } catch (err) {
+        this.xError(err);
+      } finally {
+        close();
+      }
+    },
+    hasAdded() {
+      const {
+        bookFavs,
+        id,
+      } = this;
+      if (!bookFavs) {
+        return false;
+      }
+      let found = false;
+      bookFavs.forEach((item) => {
+        if (found) {
+          return;
+        }
+        found = id === item.id;
+      });
+      return found;
     }
   },
   beforeMount() {

@@ -1,6 +1,7 @@
 import { mapActions, mapState } from "vuex";
 import Banner from "@/components/Banner";
 import BookView from "@/components/BookView";
+import BookFavView from "@/components/BookFavView";
 import { routeLogin, routeRegister } from "@/routes";
 
 const functions = {
@@ -15,6 +16,7 @@ export default {
   components: {
     Banner,
     BookView,
+    BookFavView,
   },
   computed: {
     ...mapState({
@@ -36,6 +38,7 @@ export default {
       bookLatestPopu: ({ book }) => book.latestPopu,
       bookSearchResult: ({ book }) => book.searchResult,
       userInfo: ({ user }) => user.info,
+      bookFavs: ({ book }) => book.favs,
     })
   },
   data() {
@@ -102,6 +105,7 @@ export default {
       "bookUserAction",
       "bookClearSearchResult",
       "bookSearch",
+      "bookGetUserFavs",
     ]),
     activeNav({id}) {
       if (id === functions.find) {
@@ -219,6 +223,11 @@ export default {
         this.xError(err);
       }
     },
+    currentNav(v) {
+      if (v === functions.shelf) {
+        this.bookGetUserFavs();
+      }
+    }
   },
   async mounted() {
     const close = this.xLoading();

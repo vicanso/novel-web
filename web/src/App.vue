@@ -8,7 +8,7 @@
 
 <script>
 import Home from "@/views/Home";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "app",
@@ -16,18 +16,37 @@ export default {
     Home
   },
   data() {
-    return {
-      account: ""
-    };
+    return {};
+  },
+  computed: {
+    ...mapState({
+      account: ({ user }) => {
+        const info = user.info;
+        if (!info || info.anonymous) {
+          return "";
+        }
+        return info.account;
+      }
+    })
+  },
+  watch: {
+    account(newValue, originalValue) {
+      if (newValue) {
+        this.bookGetUserFavs();
+      }
+    }
   },
   methods: {
-    ...mapActions(["userGetInfo", "userGetSetting"])
+    ...mapActions(["userGetInfo", "userGetSetting", "bookGetUserFavs"])
   },
   async beforeMount() {
     const close = this.xLoading();
     try {
       await this.userGetInfo();
       await this.userGetSetting();
+      // if (!data.anonymous) {
+      //   await this.bookGetUserFavs();
+      // }
     } catch (err) {
       this.xError(err);
     } finally {

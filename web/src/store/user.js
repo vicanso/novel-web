@@ -20,6 +20,7 @@ const state = {
 const userGetInfo = async ({ commit }) => {
   const res = await request.get(USERS_ME);
   commit(USER_INFO, res.data);
+  return res;
 };
 
 // 用户登录
