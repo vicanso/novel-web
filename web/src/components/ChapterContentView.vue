@@ -335,11 +335,12 @@ export default {
       if (this.chapterNo === 0) {
         prevTips = "已至第一章";
       }
+      const template = `<p style="margin-top:60px" class="tac">%s</p>`;
       pages.unshift({
-        html: `<p class="tac">${prevTips}</p>`
+        html: template.replace("%s", prevTips)
       });
       pages.push({
-        html: `<p class="tac">${nextTips}</p>`
+        html: template.replace("%s", nextTips)
       });
       const maxZIndex = pages.length;
       pages.forEach((item, i) => {

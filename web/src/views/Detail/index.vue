@@ -128,7 +128,13 @@ mixin ChaptersView
           a(
             @click="toggleChapterOrder"
             href="javascript:;"
-          ) 倒序
+          )
+            span(
+              v-if='chapterOrderAsc'
+            ) 倒序
+            span(
+              v-else
+            ) 正序
       ul.chapters
         li(
           v-for="item, index in currentChapters"
