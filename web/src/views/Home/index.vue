@@ -115,6 +115,7 @@ mixin BookSearch
       autofocus
     )
       mt-cell(
+        @click.native="showDetail(item.id)"
         v-for="item in bookSearchResult"
         :key="item.name"
         :title="item.name"
@@ -148,9 +149,9 @@ mixin BookShelf
     .books.fullHeightScroll(
       v-else-if="bookFavs"
     )
-      p.tac(
+      .tipsWrapper: p.tac(
         v-if="bookFavs.length === 0"
-      ) 您尚未收藏小说，请先收藏~
+      ) 您尚未收藏小说，请先收藏吧~
       BookFavView.book(
         v-for="item in bookFavs"
         :key="item.id"

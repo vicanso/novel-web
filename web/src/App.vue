@@ -30,7 +30,7 @@ export default {
     })
   },
   watch: {
-    account(newValue, originalValue) {
+    account(newValue) {
       if (newValue) {
         this.bookGetUserFavs();
       }
@@ -44,9 +44,6 @@ export default {
     try {
       await this.userGetInfo();
       await this.userGetSetting();
-      // if (!data.anonymous) {
-      //   await this.bookGetUserFavs();
-      // }
     } catch (err) {
       this.xError(err);
     } finally {

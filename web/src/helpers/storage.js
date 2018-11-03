@@ -57,6 +57,16 @@ export async function clearChapterStoreExpired() {
   });
 }
 
+export async function clearChapterStoreById(id) {
+  const keys = await chapterStore.keys();
+  const idStr = `${id}`;
+  keys.forEach(async key => {
+    if (key.indexOf(idStr) === 0) {
+      await chapterStore.removeItem(key);
+    }
+  });
+}
+
 // ChapterCache 章节缓存
 export class ChapterCache {
   constructor(id) {

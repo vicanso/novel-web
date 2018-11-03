@@ -2,7 +2,7 @@ import { mapActions, mapState } from "vuex";
 import Banner from "@/components/Banner";
 import BookView from "@/components/BookView";
 import BookFavView from "@/components/BookFavView";
-import { routeLogin, routeRegister } from "@/routes";
+import { routeLogin, routeRegister,routeDetail } from "@/routes";
 
 const functions = {
   shelf: 'shelf',
@@ -107,6 +107,14 @@ export default {
       "bookSearch",
       "bookGetUserFavs",
     ]),
+    showDetail(id) {
+      this.$router.push({
+        name: routeDetail,
+        params: {
+          id,
+        }
+      });
+    },
     activeNav({id}) {
       if (id === functions.find) {
         this.keyword = "";
@@ -224,6 +232,13 @@ export default {
       }
     },
     currentNav(v) {
+      const {
+        userInfo
+      } = this;
+      // 如果未登录，不需要加载收藏
+      if (!userInfo || userInfo.anonymous) {
+        return
+      }
       if (v === functions.shelf) {
         this.bookGetUserFavs();
       }

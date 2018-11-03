@@ -12,6 +12,9 @@
         v-if="hasUpdated"
       )
       | {{name}}
+      span.updatedAt.font12(
+        v-if="latestUpdatedAt"
+      ) (更新于:{{latestUpdatedAt}})
     .readingChapter(
       v-if="readingChapter"
     ) 上次阅读：
@@ -20,7 +23,6 @@
       v-if="latestChapter"
     ) 最新章节：
       span {{latestChapter.title}}
-      .updatedAt.pullRight.font12 {{latestUpdatedAt}}
 
 </template>
 <style lang="sass" scoped>
@@ -47,14 +49,16 @@ $coverWidth: 80px
     font-size: 16px
   .readingChapter, .latestChapter
     font-size: 13px
+    height: $lineHeight
     overflow: hidden
     color: $COLOR_DARK_GRAY
     text-overflow: ellipsis
-    word-break: break-all
   .readingChapter
     margin-bottom: 5px
   .updatedAt
     color: $COLOR_DARK_BLUE
+    font-weight: 400
+    margin-left: 5px
 
 </style>
 
