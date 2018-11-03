@@ -93,6 +93,8 @@ export default {
       loading: false,
       keyword: "",
       searchBooks: null,
+      // 正在拉取收藏列表
+      fetchingUserFavas: false,
     };
   },
   methods: {
@@ -231,7 +233,7 @@ export default {
         this.xError(err);
       }
     },
-    currentNav(v) {
+    async currentNav(v) {
       const {
         userInfo
       } = this;
@@ -240,7 +242,14 @@ export default {
         return
       }
       if (v === functions.shelf) {
-        this.bookGetUserFavs();
+        this.fetchingUserFavas = true;
+        try {
+          await this.bookGetUserFavs();
+        } catch (err) {
+          this.xError(err);
+        } finally {
+          this.fetchingUserFavas = false;
+        }
       }
     }
   },

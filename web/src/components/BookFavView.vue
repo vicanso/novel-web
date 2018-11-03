@@ -17,12 +17,10 @@
       ) (更新于:{{latestUpdatedAt}})
     .readingChapter(
       v-if="readingChapter"
-    ) 上次阅读：
-      span {{readingChapter.title}}
+    ) 上次阅读：{{readingChapter.title}}
     .latestChapter(
       v-if="latestChapter"
-    ) 最新章节：
-      span {{latestChapter.title}}
+    ) 最新章节：{{latestChapter.title}}
 
 </template>
 <style lang="sass" scoped>
@@ -53,6 +51,7 @@ $coverWidth: 80px
     overflow: hidden
     color: $COLOR_DARK_GRAY
     text-overflow: ellipsis
+    white-space: nowrap
   .readingChapter
     margin-bottom: 5px
   .updatedAt
@@ -65,13 +64,13 @@ $coverWidth: 80px
 <script>
 import ImageView from "@/components/ImageView";
 import { routeDetail } from "@/routes";
-import { getCover, formatDate } from "@/helpers/util";
+import { getCover, getDurationDesc } from "@/helpers/util";
 
 const coverHeight = 98;
 
 export default {
   components: {
-    ImageView,
+    ImageView
   },
   props: {
     id: {
@@ -87,35 +86,30 @@ export default {
       required: true
     },
     cover: {
-      type: String,
+      type: String
     },
     latestChapter: {
-      type: Object,
+      type: Object
     },
     readingChapter: {
-      type: Object,
+      type: Object
     }
   },
   data() {
     return {
-      coverUrl: "",
+      coverUrl: ""
     };
   },
   computed: {
     latestUpdatedAt() {
-      const {
-        latestChapter
-      } = this;
+      const { latestChapter } = this;
       if (!latestChapter || !latestChapter.updatedAt) {
         return;
       }
-      return formatDate(latestChapter.updatedAt).substring(5);
+      return getDurationDesc(latestChapter.updatedAt);
     },
     hasUpdated() {
-      const {
-        latestChapter,
-        readingChapter,
-      } = this;
+      const { latestChapter, readingChapter } = this;
       if (!latestChapter || !readingChapter) {
         return false;
       }

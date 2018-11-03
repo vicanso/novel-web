@@ -149,6 +149,9 @@ mixin BookShelf
     .books.fullHeightScroll(
       v-else-if="bookFavs"
     )
+      .fetchingTips.tac.font12(
+        v-if="fetchingUserFavas"
+      ) 正在更新...
       .tipsWrapper: p.tac(
         v-if="bookFavs.length === 0"
       ) 您尚未收藏小说，请先收藏吧~

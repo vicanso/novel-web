@@ -1,7 +1,5 @@
 import request from "axios";
-import {
-  sortBy,
-} from "lodash-es";
+import { sortBy } from "lodash-es";
 import {
   BOOKS,
   BOOKS_RECOMMEND_BY_ID,
@@ -287,19 +285,19 @@ const bookToggleFav = async ({ commit }, { id, category }) => {
     category
   });
   await bookGetUserFavs({
-    commit,
+    commit
   });
-  if (category === 'remove') {
-    clearChapterStoreById(id)
+  if (category === "remove") {
+    clearChapterStoreById(id);
   }
 };
 
 // 更新收藏信息
-const bookFavUpdate = async(tmp, {id, readingChapter}) => {
+const bookFavUpdate = async (tmp, { id, readingChapter }) => {
   await request.patch(BOOKS_USER_FAVS + "/" + id, {
-    readingChapter,
+    readingChapter
   });
-}
+};
 
 const actions = {
   bookGetDetail,
@@ -359,16 +357,14 @@ const mutations = {
     state.book.searchResult = data;
   },
   [BOOK_LIST_USER_FAV](state, data) {
-    const {
-      favs,
-    } = data;
-    state.book.favs = sortBy(favs, (item) => {
+    const { favs } = data;
+    state.book.favs = sortBy(favs, item => {
       if (item.latestChapter) {
         return item.latestChapter.updatedAt;
       }
       return item.updatedAt;
     }).reverse();
-  },
+  }
 };
 
 export default {

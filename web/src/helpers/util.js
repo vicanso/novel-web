@@ -65,6 +65,39 @@ export function formatDate(str) {
   return `${date.getFullYear()}-${month}-${day} ${hours}:${mintues}:${seconds}`;
 }
 
+export function getToday() {
+  return formatDate(new Date().toISOString()).substring(0, 10);
+}
+
+export function getYesterday() {
+  const date = new Date(Date.now() - 24 * 3600 * 1000);
+  return formatDate(date.toISOString()).substring(0, 10);
+}
+
+export function getDurationDesc(str) {
+  const offset = Date.now() - new Date(str).getTime();
+  const mintues10 = 10 * 60 * 1000;
+  const hour1 = 3600 * 1000;
+  if (offset < mintues10) {
+    return "10分钟内";
+  }
+  if (offset < hour1) {
+    return "1小时内";
+  }
+  const len = 10;
+  const today = getToday();
+  const yesterday = getYesterday();
+  const date = formatDate(str);
+  const dateStr = date.substring(0, len);
+  if (today === dateStr) {
+    return `今天${date.substring(len)}`;
+  }
+  if (yesterday === dateStr) {
+    return `昨天${date.substring(len)}`;
+  }
+  return date.substring(5);
+}
+
 // copy copy the value
 export function copy(value) {
   // 来源自：https://juejin.im/post/5a94f8eff265da4e9b593c29
