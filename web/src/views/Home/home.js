@@ -104,7 +104,6 @@ export default {
       "bookListTodayRecommend",
       "bookListLatestPopu",
       "bookCacheRemove",
-      "bookUserAction",
       "bookClearSearchResult",
       "bookSearch",
       "bookGetUserFavs",

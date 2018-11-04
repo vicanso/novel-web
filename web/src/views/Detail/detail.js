@@ -128,6 +128,7 @@ export default {
       "bookUpdateReadInfo",
       "bookGetStoreChapterIndexes",
       "bookToggleFav",
+      "bookUserAction",
       "bookFavUpdate",
       "bookDownload",
     ]),
@@ -381,8 +382,17 @@ export default {
       this.changeChapterSection(currentChapterSection);
     },
     refresh() {
+      const {
+        userInfo,
+      } = this;
       const {id} = this.$route.params;
       this.init(id);
+      if (userInfo && !userInfo.anonymous) {
+        this.bookUserAction({
+          id,
+          type: 'view',
+        });
+      }
     },
     async download() {
       const close = this.xLoading({

@@ -126,6 +126,9 @@ export class BookReadInfo {
     const data = await bookReadInfoStore.getItem(this.id);
     return data;
   }
+  async destroy() {
+    await bookReadInfoStore.removeItem(this.id);
+  }
 }
 
 export function saveUserSetting(data) {

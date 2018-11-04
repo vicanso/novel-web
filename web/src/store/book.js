@@ -289,6 +289,16 @@ const bookToggleFav = async ({ commit }, { id, category }) => {
   });
   if (category === "remove") {
     clearChapterStoreById(id);
+    const b = new BookReadInfo(id);
+    b.destroy();
+  } else if (category === "add") {
+    bookUserAction(
+      { commit },
+      {
+        id,
+        type: "like"
+      }
+    );
   }
 };
 
