@@ -94,6 +94,9 @@ export default {
         wordCount,
       } = v;
       this.cover = getCover(cover, 100);
+      if (!wordCount) {
+        return;
+      }
       const base = 10 * 1000;
       let wordCountDesc = "";
       if (wordCount >= base) {

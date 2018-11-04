@@ -150,6 +150,9 @@ export function waitfor(ms) {
 }
 
 export function getCover(cover, height) {
+  if (!cover) {
+    return "";
+  }
   return `${coverUrlPrefix}/${cover}-90-0-${height}.jpeg`;
 }
 
