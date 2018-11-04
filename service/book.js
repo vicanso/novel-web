@@ -20,9 +20,12 @@ const defaultQuery = {
   order: "-updatedAt"
 };
 
-request.interceptors.request.use(function(config) {
-  config.headers.Host = "papa.aslant.site";
-  return config;
+request.interceptors.request.use(function(c) {
+  const hostname = config.getConfig("api.hostname");
+  if (hostname) {
+    c.headers.Host = hostname;
+  }
+  return c;
 });
 
 function getUrl(key) {
@@ -69,7 +72,9 @@ async function fillHtml(data) {
   html = html.replace("{{FILL_CONTENT}}", data);
   const m = {};
   m[`"env": "development"`] = `"env": "${config.getENV()}"`;
-  m[`"coverUrlPrefix": ""`] = `"coverUrlPrefix": "${config.getConfig("coverUrlPrefix")}"`;
+  m[`"coverUrlPrefix": ""`] = `"coverUrlPrefix": "${config.getConfig(
+    "coverUrlPrefix"
+  )}"`;
   _.forEach(m, (v, k) => {
     html = html.replace(k, v);
   });
