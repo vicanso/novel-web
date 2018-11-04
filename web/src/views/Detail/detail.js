@@ -94,15 +94,14 @@ export default {
         wordCount,
       } = v;
       this.cover = getCover(cover, 100);
-      if (!wordCount) {
-        return;
-      }
-      const base = 10 * 1000;
       let wordCountDesc = "";
-      if (wordCount >= base) {
-        wordCountDesc = `${Math.floor(wordCount / base)}万字`;
-      } else {
-        wordCountDesc = `${wordCount}字`;
+      if (!wordCount) {
+        const base = 10 * 1000;
+        if (wordCount >= base) {
+          wordCountDesc = `${Math.floor(wordCount / base)}万字`;
+        } else {
+          wordCountDesc = `${wordCount}字`;
+        }
       }
       this.wordCountDesc = wordCountDesc;
     },

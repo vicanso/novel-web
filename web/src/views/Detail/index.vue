@@ -19,7 +19,9 @@ mixin MainContent
           v-if="detail.category && detail.category.length"
         ) | 
         span.font12 {{detail.author}}
-        .wordCount {{wordCountDesc}}
+        .wordCount(
+          v-if="wordCountDesc"
+        ) {{wordCountDesc}}
         .latestChapter.font12(
           v-if="latestChapter"
         ) 最新章节：
