@@ -90,12 +90,12 @@ export function getDurationDesc(str) {
   const date = formatDate(str);
   const dateStr = date.substring(0, len);
   if (today === dateStr) {
-    return `今天${date.substring(len)}`;
+    return `今天${date.substring(len, len + 6)}`;
   }
   if (yesterday === dateStr) {
-    return `昨天${date.substring(len)}`;
+    return `昨天${date.substring(len, len + 6)}`;
   }
-  return date.substring(5);
+  return date.substring(5, 16);
 }
 
 // copy copy the value
