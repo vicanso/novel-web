@@ -67,7 +67,13 @@ async function fillHtml(data) {
   const file = path.join(staticPath, "index.html");
   let html = await readFile(file, "utf8");
   html = html.replace("{{FILL_CONTENT}}", data);
-  return html.replace(`"development"`, `"${config.getENV()}"`);
+  const m = {};
+  m[`"env": "development"`] = `"env": "${config.getENV()}"`;
+  m[`"coverUrlPrefix": ""`] = `"coverUrlPrefix": "${config.getConfig("coverUrlPrefix")}"`;
+  _.forEach(m, (v, k) => {
+    html = html.replace(k, v);
+  });
+  return html;
 }
 
 exports.homeView = async ctx => {

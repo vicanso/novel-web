@@ -33,11 +33,23 @@ export default {
     account(newValue) {
       if (newValue) {
         this.bookGetUserFavs();
+        this.refreshUserSession();
       }
     }
   },
   methods: {
-    ...mapActions(["userGetInfo", "userGetSetting", "bookGetUserFavs"])
+    ...mapActions([
+      "userGetInfo",
+      "userGetSetting",
+      "bookGetUserFavs",
+      "userRefresh"
+    ]),
+    refreshUserSession() {
+      // 每5分钟刷新一次session ttl
+      setInterval(() => {
+        this.userRefresh();
+      }, 5 * 60 * 1000);
+    }
   },
   async beforeMount() {
     const close = this.xLoading();

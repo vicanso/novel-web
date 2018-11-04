@@ -62,6 +62,10 @@ const userSaveSetting = async ({ commit }, data) => {
   commit(USER_SETTING, setting);
 };
 
+const userRefresh = async () => {
+  await request.patch(USERS_ME);
+};
+
 const mutations = {
   // 用户信息
   [USER_INFO](state, data) {
@@ -78,6 +82,7 @@ const actions = {
   userLogin,
   userLogout,
   userGetSetting,
+  userRefresh,
   userSaveSetting
 };
 
