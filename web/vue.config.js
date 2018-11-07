@@ -2,7 +2,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/@nv": {
-        target: "http://jenny.f3322.net:3015",
+        target: "https://papanovel.com",
         changeOrigin: true
       }
     }

@@ -182,7 +182,7 @@ export default {
       } = this;
       try {
         await this.bookListTodayRecommend({
-          limit: 3,
+          limit: 5,
           order,
           field: hotFields,
         });
@@ -196,7 +196,7 @@ export default {
       } = this;
       try {
         await this.bookListLatestPopu({
-        limit: 5,
+        limit: 10,
         order: "latestViewCount",
         field: hotFields,
         });

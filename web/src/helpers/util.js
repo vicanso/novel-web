@@ -153,7 +153,9 @@ export function getCover(cover, height) {
   if (!cover) {
     return "";
   }
-  return `${coverUrlPrefix}/${cover}-90-0-${height}.jpeg`;
+  const ratio = Math.min(getDevicePixelRatio(), 1.5);
+  const v = Math.floor(height * ratio);
+  return `${coverUrlPrefix}/${cover}-90-0-${v}.jpeg`;
 }
 
 // getFontMetrics get font metrics instance
@@ -170,4 +172,8 @@ export function getFontMetrics(options) {
     ins: fontMetrics
   };
   return fontMetrics;
+}
+
+export function getDevicePixelRatio() {
+  return window.devicePixelRatio || 1;
 }
