@@ -353,13 +353,15 @@ const mutations = {
     if (!stateData.list) {
       stateData.list = [];
     }
+    const list = stateData.list.slice(0);
     const { books, count, offset } = data;
     books.forEach(function(item, i) {
       if (item.updatedAt) {
         item.updatedAt = formatDate(item.updatedAt);
       }
-      stateData.list[offset + i] = item;
+      list[offset + i] = item;
     });
+    stateData.list = list;
     if (count >= 0) {
       stateData.count = count;
     }
