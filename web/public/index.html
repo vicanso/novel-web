@@ -9,11 +9,13 @@
     <title>爬爬书屋</title>
     <script>
       (function() {
+        // CONFIG START
         window.CONFIG = {
           "env": "development",
           "urlPrefix": "/@nv",
           "coverUrlPrefix": "",
         };
+        // CONFIG END
         const pathname = location.pathname;
         if (pathname === "/" || location.protocol === "file:") {
           return;
