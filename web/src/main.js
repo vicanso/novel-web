@@ -68,6 +68,7 @@ new Vue({
   render: h => h(App)
 }).$mount("#app");
 
-setTimeout(() => {
-  clearChapterStoreExpired();
-}, 5000);
+// 启动时清理一次缓存数据
+setTimeout(clearChapterStoreExpired, 5000);
+// 每30分钟检查一次缓存数据清理
+setInterval(clearChapterStoreExpired, 30 * 60 * 1000);

@@ -198,13 +198,23 @@ const getChapters = async (id, offset, limit) => {
   });
 };
 
-const bookGetChapterContent = async (tmp, { id, no }) => {
+const bookGetChapterContent = async (tmp, { id, no, isPreload }) => {
   const c = new ChapterCache(id);
   const data = await c.get(no);
+  const limit = 10;
   if (data) {
+    // 如果不是预加载，提前做预加载
+    if (!isPreload) {
+      setTimeout(() => {
+        bookGetChapterContent(null, {
+          id,
+          no: no + limit,
+          isPreload: true
+        });
+      }, 3000);
+    }
     return data;
   }
-  const limit = 10;
   let offset = Math.floor(no / limit) * limit;
   const res = await getChapters(id, offset, limit);
   const { chapters } = res.data;

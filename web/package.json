@@ -6,6 +6,7 @@
     "format": "node node_modules/.bin/prettier --write *.js */*.js */*.vue */*/*.js */**/*.vue",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build-app": "BASE_URL=./ vue-cli-service build",
     "lint": "vue-cli-service lint",
     "dev": "vue-cli-service serve"
   },

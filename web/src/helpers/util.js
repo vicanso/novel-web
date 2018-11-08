@@ -153,7 +153,7 @@ export function getCover(cover, height) {
   if (!cover) {
     return "";
   }
-  const ratio = Math.min(getDevicePixelRatio(), 1.5);
+  const ratio = Math.min(getDevicePixelRatio(), 2);
   const v = Math.floor(height * ratio);
   return `${coverUrlPrefix}/${cover}-90-0-${v}.jpeg`;
 }

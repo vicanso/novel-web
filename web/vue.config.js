@@ -1,3 +1,9 @@
+let baseUrl = process.env.NODE_ENV === "production" ? "./static/" : "/";
+
+if (process.env.BASE_URL) {
+  baseUrl = process.env.BASE_URL;
+}
+
 module.exports = {
   devServer: {
     proxy: {
@@ -7,5 +13,5 @@ module.exports = {
       }
     }
   },
-  baseUrl: process.env.NODE_ENV === "production" ? "/static/" : "/"
+  baseUrl
 };

@@ -65,19 +65,29 @@ async function getPopu() {
     title: "最新热门"
   });
 }
-
 async function fillHtml(data) {
   const file = path.join(staticPath, "index.html");
   let html = await readFile(file, "utf8");
   html = html.replace("{{FILL_CONTENT}}", data);
-  const m = {};
-  m[`"env": "development"`] = `"env": "${config.getENV()}"`;
-  m[`"coverUrlPrefix": ""`] = `"coverUrlPrefix": "${config.getConfig(
-    "coverUrlPrefix"
-  )}"`;
-  _.forEach(m, (v, k) => {
-    html = html.replace(k, v);
+  const arr = [];
+  arr.push({
+    reg: /"env": "(\S*?)"/,
+    value: `"env": "${config.getENV()}"`
   });
+  arr.push({
+    reg: /"urlPrefix": "(\S*?)"/,
+    value: `"urlPrefix": "/@nv"`
+  });
+  arr.push({
+    reg: /"coverUrlPrefix": "(\S*?)"/,
+    value: `"coverUrlPrefix": "${config.getConfig("coverUrlPrefix")}"`
+  });
+  _.forEach(arr, item => {
+    const { reg, value } = item;
+    html = html.replace(reg, value);
+  });
+  // cordova的文件引入删除
+  html = html.replace("<script src=cordova.js></script>", "");
   return html;
 }
 

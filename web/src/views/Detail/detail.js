@@ -131,6 +131,7 @@ export default {
       "bookFavUpdate",
       "bookDownload",
     ]),
+    // 加载详情内容
     async load(id) {
       const close = this.xLoading();
       try {
@@ -157,6 +158,7 @@ export default {
         this.wordCountDesc = wordCountDesc;
         this.detail = book;
         this.chapterCount = chapterCount;
+        // 最新阅读章节
         if (latestChapter) {
           latestChapter.updatedAt = formatDate(latestChapter.updatedAt);
         }
@@ -298,6 +300,7 @@ export default {
       const {
         id,
         view,
+        userInfo,
       } = this;
       const close = this.xLoading();
       try {
@@ -318,7 +321,7 @@ export default {
         this.currentChapter = data;
         this.currentChapterNo = no;
         this.currentChapterPage = page;
-        if (data.index) {
+        if (userInfo && !userInfo.anonymous && data.index) {
           this.bookFavUpdate({
             id,
             readingChapter: data.index,

@@ -41,7 +41,7 @@ mixin Recommends
     v-if="recommendBooks && recommendBooks.length"
   )
     h3 同类热门
-    BookView.book(
+    BookView.bookView(
       v-for="item in recommendBooks"
       :key="item.id"
       :id="item.id"

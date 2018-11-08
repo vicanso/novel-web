@@ -14,6 +14,8 @@
     padding: 15px
     $coverWidth: 80px
     border-bottom: $GRAY_BORDER
+    .cover
+      width: $coverWidth
     .infos
       margin-left: $coverWidth + 10
       span
@@ -39,15 +41,17 @@
       color: $COLOR_GRAY
 .recommends
   background-color: $COLOR_WHITE
-  margin: 15px 0
+  margin: 15px 0 5px 0
   padding-top: 10px
   h3
     margin: 0 0 0 10px
     padding: 0
     line-height: 2em
     font-size: 16px
-  .book
+  .bookView
     border-bottom: $GRAY_BORDER
+    height: 120px
+    overflow: hidden
 
 .functions
   position: fixed 

@@ -4,6 +4,7 @@ mixin MainHeader
   mt-header.mainHeader(
     fixed
     v-if="isShowingSetting"
+    :title="chapter && chapter.title"
   )
     a.mainHeaderFunction(
       slot="left"
@@ -53,12 +54,14 @@ mixin SettingFooter
     div(
       v-html="item.html"
     )
-  .processBar.font12(
-    v-if="chapterCount"
-  ) {{(100 * chapterNo / chapterCount).toFixed(2) + "%"}}
+    .processBar.font12(
+      v-if="chapterCount"
+    ) {{(100 * chapterNo / chapterCount).toFixed(2) + "%"}}
 </template>
 <style lang="sass" scoped>
 @import '@/styles/const.sass'
+.refresh
+  font-weight: 600
 .content
   position: absolute
   left: 0
@@ -107,9 +110,12 @@ mixin SettingFooter
   z-index: 99 !important
 .processBar
   position: absolute
-  bottom: 5px
-  right: 15px
-  z-index: 89
+  left: 0
+  bottom: 0
+  right: 0
+  line-height: 20px
+  padding-right: 15px
+  text-align: right
 </style>
 
 <script>
@@ -192,7 +198,11 @@ export default {
       let direction = "";
       const directionLeft = "left";
       const directionRight = "right";
+      // 结束时切换
       const end = (item, currentPage, transX) => {
+        if (!item) {
+          return;
+        }
         this.currentPage = currentPage;
         const { style } = item;
         style.transition = "0.4s transform";

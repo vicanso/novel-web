@@ -11,10 +11,11 @@
       (function() {
         window.CONFIG = {
           "env": "development",
-          "coverUrlPrefix": ""
+          "urlPrefix": "/@nv",
+          "coverUrlPrefix": "",
         };
         const pathname = location.pathname;
-        if (pathname === "/") {
+        if (pathname === "/" || location.protocol === "file:") {
           return;
         }
         location.replace("/#" + pathname);

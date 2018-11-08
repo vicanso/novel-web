@@ -85,7 +85,7 @@ mixin BookGallery
           v-for="item in books"
           :key="item.id"
         )
-          BookView(
+          BookView.bookView(
             :id="item.id"
             :name="item.name"
             :author="item.author"
