@@ -300,7 +300,6 @@ export default {
       const {
         id,
         view,
-        userInfo,
       } = this;
       const close = this.xLoading();
       try {
@@ -309,6 +308,9 @@ export default {
           id,
           no,
         });
+        if (!data) {
+          throw new Error('加载数据失败');
+        }
         await this.bookUpdateReadInfo({
           id,
           no,
@@ -321,9 +323,11 @@ export default {
         this.currentChapter = data;
         this.currentChapterNo = no;
         this.currentChapterPage = page;
-        if (userInfo && !userInfo.anonymous && data.index) {
+        // 如果已加入收藏则更新收藏信息
+        if (this.hasAdded() && data.index) {
           this.bookFavUpdate({
             id,
+            readingChapterNo: no,
             readingChapter: data.index,
           });
         }

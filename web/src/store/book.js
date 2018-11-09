@@ -1,5 +1,5 @@
 import request from "axios";
-import { sortBy } from "lodash-es";
+import { sortBy, find } from "lodash-es";
 import {
   BOOKS,
   BOOKS_RECOMMEND_BY_ID,
@@ -275,7 +275,22 @@ const bookGetStoreChapterIndexes = async (tmp, { id }) => {
 // bookGetReadInfo 获取当前阅读信息（阅读至第几章，开始阅读时间，最新阅读时间）
 const bookGetReadInfo = async (tmp, { id }) => {
   const b = new BookReadInfo(id);
-  return await b.get();
+  const localReadInfo = await b.get();
+  if (localReadInfo) {
+    return localReadInfo;
+  }
+  const serverReadInfo = find(state.book.favs, item => item.id === id);
+  if (
+    !serverReadInfo ||
+    !serverReadInfo.latestChapter ||
+    !serverReadInfo.latestChapter.no
+  ) {
+    return null;
+  }
+  return {
+    no: serverReadInfo.latestChapter.no,
+    page: 1
+  };
 };
 
 // bookUpdateReadInfo 更新当前阅读信息
@@ -313,8 +328,9 @@ const bookToggleFav = async ({ commit }, { id, category }) => {
 };
 
 // 更新收藏信息
-const bookFavUpdate = async (tmp, { id, readingChapter }) => {
+const bookFavUpdate = async (tmp, { id, readingChapter, readingChapterNo }) => {
   await request.patch(BOOKS_USER_FAVS + "/" + id, {
+    readingChapterNo,
     readingChapter
   });
 };
