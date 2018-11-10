@@ -1,5 +1,6 @@
 import bluebird from "bluebird";
 global.Promise = bluebird;
+import FastClick from 'fastclick';
 import "intersection-observer";
 import Vue from "vue";
 import App from "@/App.vue";
@@ -15,6 +16,7 @@ import { clearChapterStoreExpired } from "@/helpers/storage";
 import "@/assets/iconfont/iconfont.css";
 import "@/directive";
 
+FastClick.attach(document.body);
 Vue.use(Mint);
 
 // 注入 router 和 store
