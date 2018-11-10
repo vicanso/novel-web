@@ -15,7 +15,7 @@ const staticPath = path.join(__dirname, "../web/dist");
 
 const defaultQuery = {
   offset: 0,
-  limit: 5,
+  limit: 20,
   field: ["id", "name", "author", "brief", "category", "updatedAt"].join(","),
   order: "-updatedAt"
 };
@@ -117,7 +117,7 @@ exports.detaiView = async ctx => {
   url = getUrl("recommendBookById");
   res = await request.get(url.replace(":id", id), {
     params: {
-      limit: 5,
+      limit: 10,
       offset: 0,
       field: "id,name,author,brief,updatedAt",
       order: "-updatedAt"
