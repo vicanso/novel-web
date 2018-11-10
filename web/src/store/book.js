@@ -275,22 +275,26 @@ const bookGetStoreChapterIndexes = async (tmp, { id }) => {
 // bookGetReadInfo 获取当前阅读信息（阅读至第几章，开始阅读时间，最新阅读时间）
 const bookGetReadInfo = async (tmp, { id }) => {
   const b = new BookReadInfo(id);
+  const readInfos = [];
   const localReadInfo = await b.get();
   if (localReadInfo) {
-    return localReadInfo;
+    readInfos.push({
+      no: localReadInfo.no,
+      page: localReadInfo.page,
+      updatedAt: localReadInfo.updatedAt
+    });
   }
   const serverReadInfo = find(state.book.favs, item => item.id === id);
-  if (
-    !serverReadInfo ||
-    !serverReadInfo.latestChapter ||
-    !serverReadInfo.latestChapter.no
-  ) {
-    return null;
+  if (serverReadInfo && serverReadInfo.readingChapter) {
+    const v = serverReadInfo.readingChapter;
+    readInfos.push({
+      no: v.no,
+      page: 1,
+      updatedAt: new Date(v.updatedAt).getTime()
+    });
   }
-  return {
-    no: serverReadInfo.latestChapter.no,
-    page: 1
-  };
+  const arr = sortBy(readInfos, item => -item.updatedAt);
+  return arr[0];
 };
 
 // bookUpdateReadInfo 更新当前阅读信息
