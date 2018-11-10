@@ -37,6 +37,7 @@
 
 <script>
 import ImageView from "@/components/ImageView";
+import { tinyUrlPrefix } from "@/config";
 export default {
   components: {
     ImageView
@@ -53,8 +54,7 @@ export default {
     };
   },
   mounted() {
-    const baseUrl =
-      "http://tiny.aslant.site/api/images/v1/center/:id-90-:w-:h.jpeg";
+    const baseUrl = `${tinyUrlPrefix}/center/:id-90-:w-:h.jpeg`;
     const dom = this.$refs.banner;
     const w = dom.clientWidth;
     const h = dom.clientHeight;

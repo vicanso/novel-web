@@ -9,4 +9,4 @@ export const urlPrefix = window.CONFIG.urlPrefix || "/@nv";
 // default timeout
 export const timeout = 10 * 1000;
 
-export const coverUrlPrefix = window.CONFIG.coverUrlPrefix;
+export const tinyUrlPrefix = window.CONFIG.tinyUrlPrefix;

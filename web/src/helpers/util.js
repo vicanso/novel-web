@@ -1,6 +1,6 @@
 import FontMetrics from "web-font-metrics";
 import { isError, map } from "lodash-es";
-import { env, coverUrlPrefix } from "@/config";
+import { env, tinyUrlPrefix } from "@/config";
 
 let currentFontMetrics = null;
 
@@ -155,7 +155,7 @@ export function getCover(cover, height) {
   }
   const ratio = Math.min(getDevicePixelRatio(), 2);
   const v = Math.floor(height * ratio);
-  return `${coverUrlPrefix}/${cover}-90-0-${v}.jpeg`;
+  return `${tinyUrlPrefix}/${cover}-90-0-${v}.jpeg`;
 }
 
 // getFontMetrics get font metrics instance

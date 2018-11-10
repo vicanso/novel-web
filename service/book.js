@@ -79,8 +79,8 @@ async function fillHtml(data) {
     value: `"urlPrefix": "/@nv"`
   });
   arr.push({
-    reg: /"coverUrlPrefix": "(\S*?)"/,
-    value: `"coverUrlPrefix": "${config.getConfig("coverUrlPrefix")}"`
+    reg: /"tinyUrlPrefix": "(\S*?)"/,
+    value: `"tinyUrlPrefix": "${config.getConfig("tinyUrlPrefix")}"`
   });
   _.forEach(arr, item => {
     const { reg, value } = item;

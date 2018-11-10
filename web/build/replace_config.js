@@ -8,7 +8,7 @@ const config = `
         window.CONFIG = {
           "env": "production",
           "urlPrefix": "https://papanovel.com/@nv",
-          "coverUrlPrefix": "https://tiny.papanovel.com/api/images/v1"
+          "tinyUrlPrefix": "https://tiny.papanovel.com/api/images/v1"
         };
 `;
 const newHtml = html.replace(
