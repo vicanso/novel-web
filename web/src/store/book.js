@@ -286,11 +286,11 @@ const bookGetReadInfo = async (tmp, { id }) => {
   }
   const serverReadInfo = find(state.book.favs, item => item.id === id);
   if (serverReadInfo && serverReadInfo.readingChapter) {
-    const v = serverReadInfo.readingChapter;
+    const { no } = serverReadInfo.readingChapter;
     readInfos.push({
-      no: v.no,
+      no,
       page: 1,
-      updatedAt: new Date(v.updatedAt).getTime()
+      updatedAt: new Date(serverReadInfo.updatedAt).getTime()
     });
   }
   const arr = sortBy(readInfos, item => -item.updatedAt);

@@ -1,6 +1,6 @@
 import bluebird from "bluebird";
 global.Promise = bluebird;
-import FastClick from 'fastclick';
+import FastClick from "fastclick";
 import "intersection-observer";
 import Vue from "vue";
 import App from "@/App.vue";
