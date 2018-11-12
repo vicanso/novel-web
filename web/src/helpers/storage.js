@@ -1,4 +1,6 @@
 import localForage from "localforage";
+import bluebird from "bluebird";
+import logger from "@/helpers/logger";
 
 const userSettingKey = "user-setting";
 
@@ -48,13 +50,21 @@ export async function clearChapterStoreExpired() {
   const now = Date.now();
   // 如果超过1个月则删除
   const ttl = 30 * 24 * 3600 * 1000;
-  keys.forEach(async key => {
-    const data = await chapterStore.getItem(key);
-    const createdAt = data.createdAt || 0;
-    if (now - createdAt > ttl) {
-      await chapterStore.removeItem(key);
+  logger.info("start to clear chapter store");
+  await bluebird.map(
+    keys,
+    async key => {
+      const data = await chapterStore.getItem(key);
+      const createdAt = data.createdAt || 0;
+      if (now - createdAt > ttl) {
+        await chapterStore.removeItem(key);
+      }
+    },
+    {
+      concurrency: 3
     }
-  });
+  );
+  logger.info("clear chapter store done");
 }
 
 export async function clearChapterStoreById(id) {

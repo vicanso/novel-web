@@ -11,6 +11,7 @@
       (function() {
         // CONFIG START
         window.CONFIG = {
+          "target": "web",
           "env": "development",
           "urlPrefix": "/@nv",
           "tinyUrlPrefix": "",
@@ -23,6 +24,8 @@
         location.replace("/#" + pathname);
       })();
     </script>
+    <!-- 用于自动填充的script -->
+    <script></script>
   </head>
   <body>
     <div style="display:none">

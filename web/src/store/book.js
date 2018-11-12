@@ -29,6 +29,7 @@ import { formatDate } from "@/helpers/util";
 
 const todayHotCategory = "今日必读";
 const statusPassed = 2;
+const statusPadding = 0;
 var currentKeyword = "";
 
 const state = {
@@ -140,11 +141,26 @@ const bookSearch = async ({ commit }, { keyword, field, limit, order }) => {
     order,
     status: statusPassed
   };
-  const res = await request.get(BOOKS, {
+  let res = await request.get(BOOKS, {
     params
   });
+  let books = [];
+  res.data.books.forEach(item => {
+    item.published = true;
+    books.push(item);
+  });
+  if (books.length < limit) {
+    params.status = statusPadding;
+    res = await request.get(BOOKS, {
+      params
+    });
+    res.data.books.forEach(item => {
+      item.published = false;
+      books.push(item);
+    });
+  }
   if (keyword === currentKeyword) {
-    commit(BOOK_SEARCH_RESULT, res.data.books);
+    commit(BOOK_SEARCH_RESULT, books);
   }
   return res;
 };
@@ -277,6 +293,7 @@ const bookGetReadInfo = async (tmp, { id }) => {
   const b = new BookReadInfo(id);
   const readInfos = [];
   const localReadInfo = await b.get();
+  // 本地缓存的阅读信息
   if (localReadInfo) {
     readInfos.push({
       no: localReadInfo.no,
@@ -284,6 +301,7 @@ const bookGetReadInfo = async (tmp, { id }) => {
       updatedAt: localReadInfo.updatedAt
     });
   }
+  // 服务器端缓存的阅读信息
   const serverReadInfo = find(state.book.favs, item => item.id === id);
   if (serverReadInfo && serverReadInfo.readingChapter) {
     const { no } = serverReadInfo.readingChapter;
@@ -317,6 +335,7 @@ const bookToggleFav = async ({ commit }, { id, category }) => {
     commit
   });
   if (category === "remove") {
+    // 清除本地缓存阅读记录
     clearChapterStoreById(id);
     const b = new BookReadInfo(id);
     b.destroy();

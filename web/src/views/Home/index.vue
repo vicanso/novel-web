@@ -115,7 +115,7 @@ mixin BookSearch
       autofocus
     )
       mt-cell(
-        @click.native="showDetail(item.id)"
+        @click.native="showSearchDetail(item)"
         v-for="item in bookSearchResult"
         :key="item.name"
         :title="item.name"

@@ -2,17 +2,19 @@ const fs = require("fs");
 const path = require("path");
 
 const indexFile = path.join(__dirname, "../dist/index.html");
-const html = fs.readFileSync(indexFile, "utf8");
+let html = fs.readFileSync(indexFile, "utf8");
 
 const config = `
         window.CONFIG = {
+          "target": "app",
           "env": "production",
           "urlPrefix": "https://papanovel.com/@nv",
           "tinyUrlPrefix": "https://tiny.papanovel.com/api/images/v1"
         };
 `;
-const newHtml = html.replace(
-  /\/\/ CONFIG START([\s\S]+)\/\/ CONFIG END/,
-  config
+html = html.replace(/\/\/ CONFIG START([\s\S]+)\/\/ CONFIG END/, config);
+html = html.replace(
+  "<script></script>",
+  '<script type="text/javascript" src="cordova.js"></script>'
 );
-fs.writeFileSync(indexFile, newHtml);
+fs.writeFileSync(indexFile, html);

@@ -86,7 +86,7 @@ export default {
         "wordCount",
         "category",
       ].join(","),
-      order: "-updatedAt",
+      order: "-updatedAt,-createdAt",
       offset: 0,
       limit: 10,
       loadDone: false,
@@ -106,6 +106,7 @@ export default {
       "bookCacheRemove",
       "bookClearSearchResult",
       "bookSearch",
+      "bookUserAction",
       "bookGetUserFavs",
     ]),
     showDetail(id) {
@@ -114,6 +115,17 @@ export default {
         params: {
           id,
         }
+      });
+    },
+    showSearchDetail({id, published}) {
+      if (published) {
+        this.showDetail(id);
+        return
+      }
+      this.xToast("很抱歉该书籍尚未上架，请耐心等待...");
+      this.bookUserAction({
+        id,
+        type: "wantToRead",
       });
     },
     activeNav({id}) {
@@ -224,7 +236,7 @@ export default {
       try {
         this.bookSearch({
           field: 'name,author,id',
-          limit: 5,
+          limit: 10,
           keyword: v,
           order: this.order,
         });
@@ -259,8 +271,8 @@ export default {
       this.fetch();
       this.initLoadmoreEvent();
       this.banners = [
-        '01CSRYT09Z31MXY7GG640T9PR2',
-        '01CSRYSFXRB7T6W7NPMM2MF478'
+        '01CW2P1JZF2AA34564TZWRXGJA',
+        '01CW2P2SGK7QBPJVHWMT7D8B7X',
       ];
     } catch (err) {
       this.xError(err);

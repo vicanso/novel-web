@@ -1,14 +1,20 @@
 <template lang="pug">
 #app
-  Home.mainView
-  transition
+  Home.mainView(
+    v-if="ready"
+  )
+  transition(
+    v-if="ready"
+  )
     router-view.childView
 </template>
 <style lang="sass" src="@/styles/app.sass"></style>
 
 <script>
 import Home from "@/views/Home";
+import { MessageBox } from "mint-ui";
 import { mapActions, mapState } from "vuex";
+import cordova from "@/helpers/cordova";
 
 export default {
   name: "app",
@@ -16,7 +22,9 @@ export default {
     Home
   },
   data() {
-    return {};
+    return {
+      ready: false
+    };
   },
   computed: {
     ...mapState({
@@ -49,18 +57,32 @@ export default {
       setInterval(() => {
         this.userRefresh();
       }, 5 * 60 * 1000);
+    },
+    async load() {
+      const close = this.xLoading();
+      try {
+        await this.userGetInfo();
+        await this.userGetSetting();
+        await cordova.waitForReady();
+        this.ready = true;
+      } catch (err) {
+        // this.xError(err);
+        MessageBox.confirm("加载失败，是否重新加载？")
+          .then(() => {
+            this.load();
+          })
+          .catch(err => {
+            if (err != "cancel") {
+              throw err;
+            }
+          });
+      } finally {
+        close();
+      }
     }
   },
-  async beforeMount() {
-    const close = this.xLoading();
-    try {
-      await this.userGetInfo();
-      await this.userGetSetting();
-    } catch (err) {
-      this.xError(err);
-    } finally {
-      close();
-    }
+  beforeMount() {
+    this.load();
   }
 };
 </script>

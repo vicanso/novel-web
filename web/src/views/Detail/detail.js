@@ -1,4 +1,5 @@
 import { mapActions, mapState } from "vuex";
+import { MessageBox } from "mint-ui";
 import ImageView from "@/components/ImageView";
 import BookView from "@/components/BookView";
 import ChapterContentView from "@/components/ChapterContentView";
@@ -12,6 +13,7 @@ import {
   routeHome,
   routeLogin,
 } from "@/routes";
+import cordova from "@/helpers/cordova";
 
 const sectionChapterCount = 100
 const readChapterView = "readChapter";
@@ -400,7 +402,7 @@ export default {
         });
       }
     },
-    async download() {
+    async confirmDownload() {
       const close = this.xLoading({
         timeout: 300 * 1000,
       });
@@ -415,6 +417,22 @@ export default {
       } finally {
         close();
       }
+    },
+    download() {
+      if (cordova.isWifi()) {
+        this.confirmDownload();
+        return;
+      }
+      const type = cordova.getConnectionType();
+      MessageBox.confirm(`您当前网络类型为：${type}，是否确认下载离线内容？`)
+      .then(() => {
+        this.confirmDownload();
+      })
+      .catch(err => {
+        if (err != "cancel") {
+          this.xError(err);
+        }
+      });
     },
     async addToShelf() {
       if (this.userInfo.anonymous) {
