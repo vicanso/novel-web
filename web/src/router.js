@@ -5,10 +5,11 @@ import { routeDetail, routeLogin, routeRegister } from "@/routes";
 import Detail from "@/views/Detail";
 import Login from "@/views/Login";
 import Register from "@/views/Register";
+import logger from "@/helpers/logger";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: "/detail/:id",
@@ -27,3 +28,26 @@ export default new Router({
     }
   ]
 });
+
+let pageLoadStats = null;
+router.beforeEach((to, from, next) => {
+  pageLoadStats = {
+    name: to.name,
+    to: to.path,
+    from: from.path,
+    startedAt: Date.now()
+  };
+  next();
+});
+
+router.afterEach(to => {
+  if (!pageLoadStats || pageLoadStats.name !== to.name) {
+    return;
+  }
+  const use = Date.now() - pageLoadStats.startedAt;
+  pageLoadStats.use = use;
+  logger.info(pageLoadStats);
+  pageLoadStats = null;
+});
+
+export default router;

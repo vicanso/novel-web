@@ -3,6 +3,7 @@ import Vuex from "vuex";
 
 import userStore from "@/store/user";
 import bookStore from "@/store/book";
+import appStore from "@/store/app";
 
 Vue.use(Vuex);
 
@@ -11,7 +12,7 @@ const defaultOptions = {
   mutations: {},
   actions: {}
 };
-[userStore, bookStore].forEach(item => {
+[userStore, bookStore, appStore].forEach(item => {
   Object.assign(defaultOptions.state, item.state);
   Object.assign(defaultOptions.mutations, item.mutations);
   Object.assign(defaultOptions.actions, item.actions);

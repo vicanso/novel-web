@@ -132,6 +132,7 @@ export default {
       "bookUserAction",
       "bookFavUpdate",
       "bookDownload",
+      "appSetSetting",
     ]),
     // 加载详情内容
     async load(id) {
@@ -285,6 +286,10 @@ export default {
       this.recommendBooks = null;
     },
     async init(id) {
+      // 设置左侧可返回
+      this.appSetSetting({
+        leftSideDragBack: true,
+      });
       this.reset();
       this.id = id;
       const data = await this.bookGetReadInfo({

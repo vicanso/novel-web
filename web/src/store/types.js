@@ -1,3 +1,5 @@
+export const APP_SETTING = "APP_SETTING";
+
 export const USER_INFO = "USER_INFO";
 export const USER_SETTING = "USER_SETTING";
 
