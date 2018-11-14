@@ -3,23 +3,14 @@ import { MessageBox } from "mint-ui";
 import ImageView from "@/components/ImageView";
 import BookView from "@/components/BookView";
 import ChapterContentView from "@/components/ChapterContentView";
-import {
-  getCover,
-  formatDate,
-  waitfor,
-} from "@/helpers/util";
-import {
-  routeDetail,
-  routeHome,
-  routeLogin,
-} from "@/routes";
+import { getCover, formatDate, waitfor } from "@/helpers/util";
+import { routeDetail, routeHome, routeLogin } from "@/routes";
 import cordova from "@/helpers/cordova";
 
-const sectionChapterCount = 100
+const sectionChapterCount = 100;
 const readChapterView = "readChapter";
 const mainView = "main";
 const chaptersView = "chapters";
-
 
 export default {
   name: "detail",
@@ -53,13 +44,13 @@ export default {
       // 是否已阅读过本书
       read: false,
       // 已缓存的章节序号
-      storeChapterInfos: null,
+      storeChapterInfos: null
     };
   },
   components: {
     ImageView,
     BookView,
-    ChapterContentView,
+    ChapterContentView
   },
   computed: {
     ...mapState({
@@ -67,10 +58,7 @@ export default {
         if (!user.setting) {
           return null;
         }
-        const {
-          colors,
-          theme,
-        } = user.setting;
+        const { colors, theme } = user.setting;
         if (!colors || !theme) {
           return null;
         }
@@ -79,22 +67,19 @@ export default {
           return null;
         }
         return {
-          "backgroundColor": v.backgroundColor,
+          backgroundColor: v.backgroundColor
         };
       },
       userInfo: ({ user }) => user.info,
-      bookFavs: ({ book }) => book.favs,
-    }),
+      bookFavs: ({ book }) => book.favs
+    })
   },
   watch: {
     detail(v) {
       if (!v) {
         return;
       }
-      const {
-        cover,
-        wordCount,
-      } = v;
+      const { cover, wordCount } = v;
       this.cover = getCover(cover, 100);
       let wordCountDesc = "";
       if (wordCount) {
@@ -111,13 +96,14 @@ export default {
       if (v !== readChapterView) {
         // 清除数据
         this.currentChapter = null;
+        this.enableLeftSideDrag();
       }
       // 如果是章节内容阅读，则不记录
       if (v === readChapterView) {
         return;
       }
       this.prevView = v;
-    },
+    }
   },
   methods: {
     ...mapActions([
@@ -132,24 +118,17 @@ export default {
       "bookUserAction",
       "bookFavUpdate",
       "bookDownload",
-      "appSetSetting",
+      "appSetSetting"
     ]),
     // 加载详情内容
     async load(id) {
       const close = this.xLoading();
       try {
         const res = await this.bookGetDetail({
-          id,
+          id
         });
-        const {
-          book,
-          chapterCount,
-          latestChapter,
-        } = res.data;
-        const {
-          cover,
-          wordCount,
-        } = book;
+        const { book, chapterCount, latestChapter } = res.data;
+        const { cover, wordCount } = book;
         this.cover = getCover(cover, 100);
         const base = 10 * 1000;
         let wordCountDesc = "";
@@ -165,7 +144,9 @@ export default {
         if (latestChapter) {
           latestChapter.updatedAt = formatDate(latestChapter.updatedAt);
         }
-        const chapterSectionCount = Math.ceil(chapterCount / sectionChapterCount);
+        const chapterSectionCount = Math.ceil(
+          chapterCount / sectionChapterCount
+        );
         const chapterSections = [];
         for (let i = 0; i < chapterSectionCount; i++) {
           const start = i * sectionChapterCount + 1;
@@ -175,7 +156,7 @@ export default {
           }
           chapterSections.push({
             start,
-            end,
+            end
           });
         }
         this.chapterSections = chapterSections;
@@ -186,31 +167,28 @@ export default {
         close();
       }
     },
-    back(view) {
-      const {
-        $router,
-      } = this;
-      if (!view) {
-        // 如果是直接打开的详情页，则跳转回首页
-        if (window.history.length <= 1) {
-          $router.push({
-            name: routeHome,
-          });
-        } else {
-          $router.back();
-        }
-        return
+    back() {
+      const { $router, view } = this;
+      if (view !== mainView) {
+        this.view = mainView;
+        return;
       }
-      this.view = view;
+      // 如果是直接打开的详情页，则跳转回首页
+      if (window.history.length <= 1) {
+        $router.push({
+          name: routeHome
+        });
+      } else {
+        $router.back();
+      }
     },
     async loadRecommend(id) {
       try {
-        const res = await 
-        this.bookGetRecommend({
+        const res = await this.bookGetRecommend({
           id,
           limit: 3,
           field: "id,name,author,brief,cover,wordCount",
-          order: "-updatedAt",
+          order: "-updatedAt"
         });
         this.recommendBooks = res.data.books;
       } catch (err) {
@@ -218,13 +196,9 @@ export default {
       }
     },
     async changeChapterSection(index) {
-      const {
-        currentChapterSection,
-        chapterSections,
-        id,
-      } = this;
+      const { currentChapterSection, chapterSections, id } = this;
       if (currentChapterSection == index) {
-        return
+        return;
       }
       this.currentChapterSection = index;
       const data = chapterSections[index];
@@ -236,14 +210,12 @@ export default {
           limit: sectionChapterCount,
           offset,
           order: "index",
-          field: "title,updatedAt,index",
+          field: "title,updatedAt,index"
         });
-        const {
-          chapters,
-        } = res.data;
+        const { chapters } = res.data;
         chapters.forEach((v, i) => {
           v.no = offset + i;
-        })
+        });
         if (this.chapterOrderAsc) {
           this.currentChapters = chapters;
         } else {
@@ -259,13 +231,13 @@ export default {
       this.view = chaptersView;
       try {
         const indexList = await this.bookGetStoreChapterIndexes({
-          id: this.id,
+          id: this.id
         });
         const storeChapterInfos = {};
-        indexList.forEach((v) => {
+        indexList.forEach(v => {
           storeChapterInfos[v] = true;
         });
-        this.storeChapterInfos = storeChapterInfos
+        this.storeChapterInfos = storeChapterInfos;
       } catch (err) {
         this.xError(err);
       }
@@ -274,9 +246,7 @@ export default {
       }
     },
     isStored(no) {
-      const {
-        storeChapterInfos,
-      } = this;
+      const { storeChapterInfos } = this;
       return storeChapterInfos[no];
     },
     reset() {
@@ -285,15 +255,18 @@ export default {
       this.currentChapters = null;
       this.recommendBooks = null;
     },
-    async init(id) {
+    enableLeftSideDrag() {
       // 设置左侧可返回
       this.appSetSetting({
-        leftSideDragBack: true,
+        leftSideDragBack: true
       });
+    },
+    async init(id) {
+      this.enableLeftSideDrag();
       this.reset();
       this.id = id;
       const data = await this.bookGetReadInfo({
-        id,
+        id
       });
       if (data) {
         this.currentChapterNo = data.no || 0;
@@ -304,24 +277,21 @@ export default {
       await this.loadRecommend(id);
     },
     async showChapterContent(no, page) {
-      const {
-        id,
-        view,
-      } = this;
+      const { id, view } = this;
       const close = this.xLoading();
       try {
         const done = waitfor(300);
         const data = await this.bookGetChapterContent({
           id,
-          no,
+          no
         });
         if (!data) {
-          throw new Error('加载数据失败');
+          throw new Error("加载数据失败");
         }
         await this.bookUpdateReadInfo({
           id,
           no,
-          page,
+          page
         });
         await done();
         if (view !== readChapterView) {
@@ -335,7 +305,7 @@ export default {
           this.bookFavUpdate({
             id,
             readingChapterNo: no,
-            readingChapter: data.index,
+            readingChapter: data.index
           });
         }
       } catch (err) {
@@ -345,13 +315,9 @@ export default {
       }
     },
     async startReading() {
-      const {
-        id,
-        currentChapterNo,
-        currentChapterPage,
-      } = this;
+      const { id, currentChapterNo, currentChapterPage } = this;
       const data = await this.bookGetReadInfo({
-        id,
+        id
       });
       let no = currentChapterNo;
       let page = currentChapterPage;
@@ -362,31 +328,24 @@ export default {
       this.showChapterContent(no, page);
     },
     startToReadChapter(no) {
-      this.showChapterContent(no, 0)
+      this.showChapterContent(no, 0);
     },
     changeChapter(index) {
       this.showChapterContent(this.currentChapterNo + index, 0);
     },
     changeChapterPage(page) {
-      const {
-        id,
-        currentChapterNo,
-      } = this;
+      const { id, currentChapterNo } = this;
       this.bookUpdateReadInfo({
         id,
         no: currentChapterNo,
-        page,
+        page
       });
     },
     backFromRead() {
       this.view = this.prevView || mainView;
     },
     toggleChapterOrder() {
-      const {
-        chapterOrderAsc,
-        chapterSections,
-        currentChapterSection,
-      } = this;
+      const { chapterOrderAsc, chapterSections, currentChapterSection } = this;
       this.currentChapters = null;
       this.chapterOrderAsc = !chapterOrderAsc;
       this.chapterSections = chapterSections.reverse();
@@ -395,26 +354,24 @@ export default {
       this.changeChapterSection(currentChapterSection);
     },
     refresh() {
-      const {
-        userInfo,
-      } = this;
-      const {id} = this.$route.params;
+      const { userInfo } = this;
+      const { id } = this.$route.params;
       this.init(id);
       if (userInfo && !userInfo.anonymous) {
         this.bookUserAction({
           id,
-          type: 'view',
+          type: "view"
         });
       }
     },
     async confirmDownload() {
       const close = this.xLoading({
-        timeout: 300 * 1000,
+        timeout: 300 * 1000
       });
       try {
         await this.bookDownload({
           id: this.id,
-          max: this.chapterCount,
+          max: this.chapterCount
         });
         this.xToast("已全部下载完成");
       } catch (err) {
@@ -430,32 +387,32 @@ export default {
       }
       const type = cordova.getConnectionType();
       MessageBox.confirm(`您当前网络类型为：${type}，是否确认下载离线内容？`)
-      .then(() => {
-        this.confirmDownload();
-      })
-      .catch(err => {
-        if (err != "cancel") {
-          this.xError(err);
-        }
-      });
+        .then(() => {
+          this.confirmDownload();
+        })
+        .catch(err => {
+          if (err != "cancel") {
+            this.xError(err);
+          }
+        });
     },
     async addToShelf() {
       if (this.userInfo.anonymous) {
         this.xToast("请先登录");
         this.$router.push({
-          name: routeLogin,
+          name: routeLogin
         });
         return;
       }
-      let category = 'add';
+      let category = "add";
       if (this.hasAdded()) {
-        category = 'remove';
+        category = "remove";
       }
       const close = this.xLoading();
       try {
         await this.bookToggleFav({
           id: this.id,
-          category,
+          category
         });
       } catch (err) {
         this.xError(err);
@@ -464,15 +421,12 @@ export default {
       }
     },
     hasAdded() {
-      const {
-        bookFavs,
-        id,
-      } = this;
+      const { bookFavs, id } = this;
       if (!bookFavs) {
         return false;
       }
       let found = false;
-      bookFavs.forEach((item) => {
+      bookFavs.forEach(item => {
         if (found) {
           return;
         }
@@ -484,12 +438,25 @@ export default {
   beforeMount() {
     this.refresh();
   },
+  mounted() {
+    this.backButtonEvent = () => {
+      // 如果是阅读内容，则跳过（该页面有处理逻辑）
+      if (this.view === ChapterContentView) {
+        return;
+      }
+      this.back();
+    };
+    cordova.on("backbutton", this.backButtonEvent);
+  },
+  beforeDestroy() {
+    cordova.removeListener("backbutton", this.backButtonEvent);
+  },
   beforeRouteUpdate(to, from, next) {
-    const {name, params} = to;
+    const { name, params } = to;
     if (name === routeDetail) {
-      const {id} = params;
+      const { id } = params;
       this.init(id);
     }
     next();
-  },
-}
+  }
+};

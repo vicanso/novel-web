@@ -2,21 +2,21 @@ import { mapActions, mapState } from "vuex";
 import Banner from "@/components/Banner";
 import BookView from "@/components/BookView";
 import BookFavView from "@/components/BookFavView";
-import { routeLogin, routeRegister,routeDetail } from "@/routes";
+import { routeLogin, routeRegister, routeDetail } from "@/routes";
 
 const functions = {
-  shelf: 'shelf',
-  hot: 'hot',
-  gallery: 'gallery',
-  find: 'find',
+  shelf: "shelf",
+  hot: "hot",
+  gallery: "gallery",
+  find: "find"
 };
 
 export default {
-  name: 'home',
+  name: "home",
   components: {
     Banner,
     BookView,
-    BookFavView,
+    BookFavView
   },
   computed: {
     ...mapState({
@@ -26,9 +26,7 @@ export default {
         if (!book || !book.categories) {
           return null;
         }
-        const {
-          categories,
-        } = book;
+        const { categories } = book;
         const result = Object.keys(categories);
         return result.sort((k1, k2) => {
           return categories[k2] - categories[k1];
@@ -38,7 +36,7 @@ export default {
       bookLatestPopu: ({ book }) => book.latestPopu,
       bookSearchResult: ({ book }) => book.searchResult,
       userInfo: ({ user }) => user.info,
-      bookFavs: ({ book }) => book.favs,
+      bookFavs: ({ book }) => book.favs
     })
   },
   data() {
@@ -50,33 +48,26 @@ export default {
       navigation: [
         {
           id: functions.shelf,
-          name: '书架',
-          cls: 'icon-all',
+          name: "书架",
+          cls: "icon-all"
         },
         {
           id: functions.hot,
-          name: '精选',
-          cls: 'icon-creditlevel',
+          name: "精选",
+          cls: "icon-creditlevel"
         },
         {
           id: functions.gallery,
-          name: '书库',
-          cls: 'icon-viewgallery',
+          name: "书库",
+          cls: "icon-viewgallery"
         },
         {
           id: functions.find,
-          name: '发现',
-          cls: 'icon-originalimage',
+          name: "发现",
+          cls: "icon-originalimage"
         }
       ],
-      field: [
-        "id",
-        "name",
-        "author",
-        "brief",
-        "cover",
-        "wordCount",
-      ].join(","),
+      field: ["id", "name", "author", "brief", "cover", "wordCount"].join(","),
       hotFields: [
         "id",
         "name",
@@ -84,7 +75,7 @@ export default {
         "brief",
         "cover",
         "wordCount",
-        "category",
+        "category"
       ].join(","),
       order: "-updatedAt,-createdAt",
       offset: 0,
@@ -94,7 +85,7 @@ export default {
       keyword: "",
       searchBooks: null,
       // 正在拉取收藏列表
-      fetchingUserFavas: false,
+      fetchingUserFavas: false
     };
   },
   methods: {
@@ -107,28 +98,28 @@ export default {
       "bookClearSearchResult",
       "bookSearch",
       "bookUserAction",
-      "bookGetUserFavs",
+      "bookGetUserFavs"
     ]),
     showDetail(id) {
       this.$router.push({
         name: routeDetail,
         params: {
-          id,
+          id
         }
       });
     },
-    showSearchDetail({id, published}) {
+    showSearchDetail({ id, published }) {
       if (published) {
         this.showDetail(id);
-        return
+        return;
       }
       this.xToast("很抱歉该书籍尚未上架，请耐心等待...");
       this.bookUserAction({
         id,
-        type: "wantToRead",
+        type: "wantToRead"
       });
     },
-    activeNav({id}) {
+    activeNav({ id }) {
       if (id === functions.find) {
         this.keyword = "";
       }
@@ -148,11 +139,11 @@ export default {
           order,
           offset,
           limit,
-          status: 2,
+          status: 2
         };
         const category = this.bookCategories[this.currentCatgory];
         if (!category) {
-          throw new Error('获取失败分类');
+          throw new Error("获取失败分类");
         }
         params.category = category;
         await this.bookList(params);
@@ -169,12 +160,10 @@ export default {
     async changeCatgeory(index) {
       this.currentCatgory = index;
       this.reset();
-      await this.fetch(); 
+      await this.fetch();
     },
     initLoadmoreEvent() {
-      const {
-        loadingMore,
-      } = this.$refs;
+      const { loadingMore } = this.$refs;
       const io = new IntersectionObserver(entries => {
         if (this.loading) {
           return;
@@ -188,29 +177,24 @@ export default {
       io.observe(loadingMore);
     },
     async listTodayRecommend() {
-      const {
-        order,
-        hotFields,
-      } = this;
+      const { order, hotFields } = this;
       try {
         await this.bookListTodayRecommend({
           limit: 5,
           order,
-          field: hotFields,
+          field: hotFields
         });
       } catch (err) {
         this.xError(err);
       }
     },
     async listLatestPopu() {
-      const {
-        hotFields,
-      } = this;
+      const { hotFields } = this;
       try {
         await this.bookListLatestPopu({
-        limit: 10,
-        order: "latestViewCount",
-        field: hotFields,
+          limit: 10,
+          order: "latestViewCount",
+          field: hotFields
         });
       } catch (err) {
         this.xError(err);
@@ -218,12 +202,12 @@ export default {
     },
     login() {
       this.$router.push({
-        name: routeLogin,
+        name: routeLogin
       });
     },
     register() {
       this.$router.push({
-        name: routeRegister,
+        name: routeRegister
       });
     }
   },
@@ -235,22 +219,20 @@ export default {
       }
       try {
         this.bookSearch({
-          field: 'name,author,id',
+          field: "name,author,id",
           limit: 10,
           keyword: v,
-          order: this.order,
+          order: this.order
         });
       } catch (err) {
         this.xError(err);
       }
     },
     async currentNav(v) {
-      const {
-        userInfo
-      } = this;
+      const { userInfo } = this;
       // 如果未登录，不需要加载收藏
       if (!userInfo || userInfo.anonymous) {
-        return
+        return;
       }
       if (v === functions.shelf) {
         this.fetchingUserFavas = true;
@@ -271,13 +253,13 @@ export default {
       this.fetch();
       this.initLoadmoreEvent();
       this.banners = [
-        '01CW2P1JZF2AA34564TZWRXGJA',
-        '01CW2P2SGK7QBPJVHWMT7D8B7X',
+        "01CW2P1JZF2AA34564TZWRXGJA",
+        "01CW2P2SGK7QBPJVHWMT7D8B7X"
       ];
     } catch (err) {
       this.xError(err);
     } finally {
       close();
     }
-  },
+  }
 };

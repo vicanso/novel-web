@@ -1,5 +1,7 @@
 import { mapActions, mapState } from "vuex";
 
+import cordova from "@/helpers/cordova";
+
 export default {
   name: "register",
   data() {
@@ -7,27 +9,20 @@ export default {
       account: "",
       password: "",
       email: "",
-      pwd: "",
+      pwd: ""
     };
   },
   computed: {
     ...mapState({
-      userInfo: ({ user }) => user.info,
+      userInfo: ({ user }) => user.info
     })
   },
   methods: {
-    ...mapActions([
-      "userRegister",
-    ]),
+    ...mapActions(["userRegister", "appSetSetting"]),
     async register() {
-      const {
-        account,
-        password,
-        email,
-        pwd,
-      } = this;
+      const { account, password, email, pwd } = this;
       if (!account || !password || !email) {
-        this.xError(new Error("用户名、密码与邮箱不能为空"))
+        this.xError(new Error("用户名、密码与邮箱不能为空"));
         return;
       }
       if (password != pwd) {
@@ -39,7 +34,7 @@ export default {
         await this.userRegister({
           account,
           password,
-          email,
+          email
         });
         this.$router.back();
       } catch (err) {
@@ -51,5 +46,18 @@ export default {
     back() {
       this.$router.back();
     }
+  },
+  beforeDestroy() {
+    cordova.removeListener("backbutton", this.backButtonEvent);
+  },
+  mounted() {
+    // 设置左侧可返回
+    this.appSetSetting({
+      leftSideDragBack: true
+    });
+    this.backButtonEvent = () => {
+      this.back();
+    };
+    cordova.on("backbutton", this.backButtonEvent);
   }
 };

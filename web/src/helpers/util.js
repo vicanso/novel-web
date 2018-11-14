@@ -1,24 +1,15 @@
 import FontMetrics from "web-font-metrics";
 import { isError, map } from "lodash-es";
-import { env, tinyUrlPrefix } from "@/config";
+import { env, tinyUrlPrefix, target } from "@/config";
 
 let currentFontMetrics = null;
-
-export function log(...args) {
-  // eslint-disable-next-line
-  console.info(...args);
-}
 
 export function isDevelopment() {
   return env == "development";
 }
 
-export function debug(...args) {
-  if (!isDevelopment()) {
-    return;
-  }
-  // eslint-disable-next-line
-  console.debug(...args);
+export function isAPP() {
+  return target === "app";
 }
 
 // 获取出错信息

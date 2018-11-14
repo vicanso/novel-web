@@ -19,6 +19,7 @@ import { MessageBox } from "mint-ui";
 import { mapActions, mapState } from "vuex";
 import cordova from "@/helpers/cordova";
 import router from "@/router";
+import { isAPP, getErrorMessage } from "@/helpers/util";
 
 export default {
   name: "app",
@@ -70,10 +71,14 @@ export default {
         await this.userGetInfo();
         await this.userGetSetting();
         await cordova.waitForReady();
+        cordova.setStatusBarDefault();
         this.ready = true;
+        if (isAPP() && cordova.isIOS()) {
+          this.initLeftSideDragEvent();
+        }
       } catch (err) {
-        // this.xError(err);
-        MessageBox.confirm("加载失败，是否重新加载？")
+        const msg = getErrorMessage(err);
+        MessageBox.confirm(`${msg}，加载失败，是否重新加载？`)
           .then(() => {
             this.load();
           })
@@ -95,6 +100,9 @@ export default {
       let draggingBack = false;
       const offsetMove = 50;
       appHammer.on("panstart pan panend", e => {
+        if (!this.leftSideDragBack) {
+          return;
+        }
         const { type, deltaX } = e;
         if (type === "panstart") {
           if (e.center.x < offsetMove) {
@@ -102,6 +110,7 @@ export default {
           }
           return;
         }
+        const x = Math.max(deltaX, 0);
         if (!draggingBack) {
           return;
         }
@@ -124,8 +133,8 @@ export default {
           return;
         }
         // 透明度
-        const opacity = Math.max(1 - deltaX / 150, 0.95);
-        el.style.transform = `translate3d(${deltaX}px, 0px, 0px)`;
+        const opacity = Math.max(1 - x / 150, 0.95);
+        el.style.transform = `translate3d(${x}px, 0px, 0px)`;
         el.style.opacity = opacity;
       });
     }
@@ -134,7 +143,6 @@ export default {
     this.load();
   },
   mounted() {
-    this.initLeftSideDragEvent();
     router.afterEach(to => {
       if (!to.name) {
         // 设置左侧不可拖动返回

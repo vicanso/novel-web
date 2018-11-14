@@ -123,6 +123,7 @@ import { mapActions, mapState } from "vuex";
 import Hammer from "hammerjs";
 import { forEach } from "lodash";
 import { getFontMetrics } from "@/helpers/util";
+import cordova from "@/helpers/cordova";
 
 // 内容展示的padding
 const padding = 15;
@@ -184,7 +185,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["userSaveSetting"]),
+    ...mapActions(["userSaveSetting", "appSetSetting"]),
     initEvent() {
       const { $el, $refs } = this;
       const { maxWidth } = this.getOptions();
@@ -335,6 +336,8 @@ export default {
         format: "html",
         color: color.color
       });
+      // 设置status bar的背景色
+      cordova.statusBarCall("backgroundColorByHexString", color.backgroundColor);
       const pages = fontMetrics.getFillTextList(chapter.content);
       this.maxPage = pages.length;
       let nextTips = "正在切换至下一章...";
@@ -411,6 +414,10 @@ export default {
     }
   },
   async mounted() {
+    this.backButtonEvent = () => {
+      this.back();
+    };
+    cordova.on("backbutton", this.backButtonEvent);
     this.initPageContent();
     await this.$next();
     let chapterPage = 1;
@@ -421,8 +428,14 @@ export default {
     this.initEvent();
     settingFunctionsArea.bottom =
       this.$el.clientHeight - settingFunctionsArea.footerHeight;
+    // 设置左侧不可拖动返回
+    this.appSetSetting({
+      leftSideDragBack: false
+    });
   },
   beforeDestroy() {
+    cordova.setStatusBarDefault();
+    cordova.removeListener("backbutton", this.backButtonEvent);
     this.hammer.destroy();
   }
 };

@@ -53,6 +53,15 @@ class Cordova extends EventEmitter {
     }
     window.StatusBar[fn](...args);
   }
+  setStatusBarDefault() {
+    const statusBar = window.StatusBar;
+    if (!statusBar) {
+      return;
+    }
+    statusBar.overlaysWebView(false);
+    statusBar.styleBlackTranslucent();
+    statusBar.backgroundColorByHexString("#111");
+  }
   getConnectionType() {
     if (window.navigator.connection) {
       return window.navigator.connection.type || Connection.wifi;
@@ -61,6 +70,9 @@ class Cordova extends EventEmitter {
   }
   isWifi() {
     return this.getConnectionType() === Connection.wifi;
+  }
+  isIOS() {
+    return this.getDevice().platform.toLowerCase() === "ios";
   }
 }
 

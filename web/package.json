@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "format": "node node_modules/.bin/prettier --write *.js */*.js */*.vue */*/*.js */**/*.vue",
+    "format": "node node_modules/.bin/prettier --write *.js */**.js */**.vue src/**/*.js src/**/*.vue src/**/**/*.js src/**/**/*.vue",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-app": "BASE_URL=./ vue-cli-service build && node build/replace_config",

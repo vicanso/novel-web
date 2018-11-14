@@ -59,7 +59,7 @@ mixin MainView
   )
     a.mainHeaderFunction(
       slot="left"
-      @click="back('')"
+      @click="back()"
     )
       i.mintui.mintui-back
     a.refresh.mainHeaderFunction(
@@ -113,7 +113,7 @@ mixin ChaptersView
     )
       a.mainHeaderFunction(
         slot="left"
-        @click="back('main')"
+        @click="back()"
       )
         i.mintui.mintui-back
     .chaptersWrapper.fullHeightScroll
@@ -180,6 +180,6 @@ mixin ReadChapterView
     +MainView
 </template>
 
-<script src="./detail.js"></script>
+<script src="./detail.js">
+</script>
 <style lang="sass" src="./detail.sass" scoped></style>
-

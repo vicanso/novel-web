@@ -33,5 +33,6 @@
   ) 返回
 </template>
 
-<script src="./register.js"></script>
+<script src="./register.js">
+</script>
 <style lang="sass" scoped src="./register.sass"></style>

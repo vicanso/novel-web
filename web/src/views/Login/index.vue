@@ -21,7 +21,6 @@
   ) 返回
 </template>
 
-<script src="./login.js"></script>
+<script src="./login.js">
+</script>
 <style lang="sass" scoped src="./login.sass"></style>
-
-
