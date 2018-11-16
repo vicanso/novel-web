@@ -78,7 +78,7 @@ export default {
         }
       } catch (err) {
         const msg = getErrorMessage(err);
-        MessageBox.confirm(`${msg}，加载失败，是否重新加载？`)
+        MessageBox.confirm(`${msg}，是否重新加载？`)
           .then(() => {
             this.load();
           })
