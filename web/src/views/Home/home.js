@@ -273,7 +273,6 @@ export default {
       ];
       // home页面一直都存在，不需要删除事件
       cordova.onStatusTap(() => {
-        this.xToast("on status tap");
         this.backToTop();
       });
     } catch (err) {

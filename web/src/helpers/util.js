@@ -171,21 +171,18 @@ export function getDevicePixelRatio() {
 }
 
 // 将滚动条滚动至top
-export function scrollTop(element, top) {
+export function scrollTop(element, top, options) {
   if (!element) {
     return;
   }
-  Velocity(element, {
-    scrollTop: top
-  });
-  // const offset = -element.scrollTop + top;
-  // const opts = _.extend(
-  //   {
-  //     container: element,
-  //     duration: 300,
-  //     offset,
-  //   },
-  //   options,
-  // );
-  // Velocity(element, 'scroll', opts);
+  const offset = -element.scrollTop + top;
+  const opts = Object.assign(
+    {
+      container: element,
+      duration: 300,
+      offset
+    },
+    options
+  );
+  Velocity(element, "scroll", opts);
 }

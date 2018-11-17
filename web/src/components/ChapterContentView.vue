@@ -121,6 +121,7 @@ mixin SettingFooter
 <script>
 import { mapActions, mapState } from "vuex";
 import Hammer from "hammerjs";
+import Velocity from "velocity-animate";
 import { forEach } from "lodash";
 import { getFontMetrics } from "@/helpers/util";
 import cordova from "@/helpers/cordova";
@@ -199,15 +200,24 @@ export default {
       let direction = "";
       const directionLeft = "left";
       const directionRight = "right";
+      let startTranslateX = 0;
       // 结束时切换
-      const end = (item, currentPage, transX) => {
+      const end = (item, currentPage, currentX, transX) => {
         if (!item) {
           return;
         }
         this.currentPage = currentPage;
-        const { style } = item;
-        style.transition = "0.4s transform";
-        style.transform = `translate3d(${transX}px, 0px, 0px)`;
+        Velocity(
+          item,
+          {
+            translateZ: 0,
+            translateX: [transX, currentX]
+          },
+          {
+            mobileHA: true,
+            duration: 400
+          }
+        );
       };
       hammer.on("pan panend panstart tap", e => {
         const { type, deltaX, center } = e;
@@ -231,7 +241,7 @@ export default {
           // 上一页
           if (x < 0.3 * maxWidth) {
             const v = this.currentPage - 1;
-            end(dom.children[v], v, 0);
+            end(dom.children[v], v, -maxWidth, 0);
             return;
           }
           // 下一页
@@ -239,6 +249,7 @@ export default {
             end(
               dom.children[this.currentPage],
               this.currentPage + 1,
+              0,
               -maxWidth
             );
             return;
@@ -286,12 +297,12 @@ export default {
               transX = -maxWidth;
               currentPage += 1;
             }
-            end(item, currentPage, transX);
+            end(item, currentPage, startTranslateX, transX);
             break;
           }
           default:
-            item.style.transform = `translate3d(${offset +
-              threshold}px, 0px, 0px)`;
+            startTranslateX = offset + threshold;
+            item.style.transform = `translate3d(${startTranslateX}px, 0px, 0px)`;
             break;
         }
       });
@@ -317,10 +328,10 @@ export default {
         const { style } = item;
         if (index < no) {
           style.transition = "";
-          style.transform = `translate3d(${-maxWidth}px, 0px, 0px)`;
+          style.transform = `translateX(${-maxWidth}px)`;
         } else {
           style.transition = "";
-          style.transform = "translate3d(0px, 0px, 0px)";
+          style.transform = "translateX(0px)";
         }
       });
     },
