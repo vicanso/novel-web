@@ -23,6 +23,7 @@ mixin Banner
     )
 mixin BookHot
   .hotWrapper.fullHeightScroll(
+    ref="hotWrapper"
     v-show="currentNav === functions.hot"
   )
     +Banner
@@ -77,7 +78,9 @@ mixin BookGallery
         href="javascript:;"
         @click="changeCatgeory(index)"
       ) {{item}}
-    .fullHeightScroll.books
+    .fullHeightScroll.books(
+      ref="galleryWrapper"
+    )
       ul(
         v-if="books"
       )
@@ -148,6 +151,7 @@ mixin BookShelf
       ) 注册
     .books.fullHeightScroll(
       v-else-if="bookFavs"
+      ref="shelfWrapper"
     )
       .fetchingTips.tac.font12(
         v-if="fetchingUserFavas"

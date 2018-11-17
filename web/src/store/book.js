@@ -294,7 +294,9 @@ const bookGetReadInfo = async (tmp, { id }) => {
   const readInfos = [];
   const localReadInfo = await b.get();
   // 本地缓存的阅读信息
+  let localNo = 0;
   if (localReadInfo) {
+    localNo = localReadInfo.no;
     readInfos.push({
       no: localReadInfo.no,
       page: localReadInfo.page,
@@ -305,11 +307,14 @@ const bookGetReadInfo = async (tmp, { id }) => {
   const serverReadInfo = find(state.book.favs, item => item.id === id);
   if (serverReadInfo && serverReadInfo.readingChapter) {
     const { no } = serverReadInfo.readingChapter;
-    readInfos.push({
-      no,
-      page: 1,
-      updatedAt: new Date(serverReadInfo.updatedAt).getTime()
-    });
+    // 如果本地阅读记录与服务器相同，使用本地记录
+    if (no !== localNo) {
+      readInfos.push({
+        no,
+        page: 1,
+        updatedAt: new Date(serverReadInfo.updatedAt).getTime()
+      });
+    }
   }
   const arr = sortBy(readInfos, item => -item.updatedAt);
   return arr[0];

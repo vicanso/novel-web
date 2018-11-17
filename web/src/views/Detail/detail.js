@@ -439,17 +439,17 @@ export default {
     this.refresh();
   },
   mounted() {
-    this.backButtonEvent = () => {
+    const fn = () => {
       // 如果是阅读内容，则跳过（该页面有处理逻辑）
       if (this.view === ChapterContentView) {
         return;
       }
       this.back();
     };
-    cordova.on("backbutton", this.backButtonEvent);
+    this.offBackButtonEvent = cordova.onBackButton(fn);
   },
   beforeDestroy() {
-    cordova.removeListener("backbutton", this.backButtonEvent);
+    this.offBackButtonEvent();
   },
   beforeRouteUpdate(to, from, next) {
     const { name, params } = to;

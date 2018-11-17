@@ -3,6 +3,8 @@ import Banner from "@/components/Banner";
 import BookView from "@/components/BookView";
 import BookFavView from "@/components/BookFavView";
 import { routeLogin, routeRegister, routeDetail } from "@/routes";
+import { scrollTop } from "@/helpers/util";
+import cordova from "@/helpers/cordova";
 
 const functions = {
   shelf: "shelf",
@@ -209,6 +211,19 @@ export default {
       this.$router.push({
         name: routeRegister
       });
+    },
+    backToTop() {
+      const domMap = {};
+      domMap[functions.hot] = "hotWrapper";
+      domMap[functions.shelf] = "shelfWrapper";
+      domMap[functions.gallery] = "galleryWrapper";
+
+      const { $refs, currentNav } = this;
+      const dom = $refs[domMap[currentNav]];
+      if (!dom) {
+        return;
+      }
+      scrollTop(dom, 0);
     }
   },
   watch: {
@@ -256,6 +271,11 @@ export default {
         "01CW2P1JZF2AA34564TZWRXGJA",
         "01CW2P2SGK7QBPJVHWMT7D8B7X"
       ];
+      // home页面一直都存在，不需要删除事件
+      cordova.onStatusTap(() => {
+        this.xToast("on status tap");
+        this.backToTop();
+      });
     } catch (err) {
       this.xError(err);
     } finally {

@@ -6,6 +6,9 @@ export const Connection = {
   wifi: "wifi"
 };
 
+const backbuttonEvent = "backbutton";
+const statusTapEvent = "statusTap";
+
 class Cordova extends EventEmitter {
   constructor() {
     super();
@@ -74,6 +77,18 @@ class Cordova extends EventEmitter {
   isIOS() {
     return this.getDevice().platform.toLowerCase() === "ios";
   }
+  onEvent(type, fn) {
+    this.on(type, fn);
+    return () => {
+      this.removeListener(type, fn);
+    };
+  }
+  onBackButton(fn) {
+    return this.onEvent(backbuttonEvent, fn);
+  }
+  onStatusTap(fn) {
+    return this.onEvent(statusTapEvent, fn);
+  }
 }
 
 const cordova = new Cordova();
@@ -82,7 +97,7 @@ const cordova = new Cordova();
   "deviceready",
   "pause",
   "resume",
-  "backbutton",
+  backbuttonEvent,
   "menubutton",
   "searchbutton",
   "startcallbutton",
@@ -90,9 +105,9 @@ const cordova = new Cordova();
   "volumedownbutton",
   "volumeupbutton",
   "activated",
-  "statusTap"
+  statusTapEvent
 ].forEach(name => {
-  if (name === "statusTap") {
+  if (name === statusTapEvent) {
     window.addEventListener(name, () => {
       cordova.emit(name);
     });

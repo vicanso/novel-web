@@ -48,16 +48,16 @@ export default {
     }
   },
   beforeDestroy() {
-    cordova.removeListener("backbutton", this.backButtonEvent);
+    this.offBackButtonEvent();
   },
   mounted() {
     // 设置左侧可返回
     this.appSetSetting({
       leftSideDragBack: true
     });
-    this.backButtonEvent = () => {
+    const fn = () => {
       this.back();
     };
-    cordova.on("backbutton", this.backButtonEvent);
+    this.offBackButtonEvent = cordova.onBackButton(fn);
   }
 };

@@ -1,6 +1,7 @@
 import FontMetrics from "web-font-metrics";
 import { isError, map } from "lodash-es";
 import { env, tinyUrlPrefix, target } from "@/config";
+import Velocity from "velocity-animate";
 
 let currentFontMetrics = null;
 
@@ -167,4 +168,24 @@ export function getFontMetrics(options) {
 
 export function getDevicePixelRatio() {
   return window.devicePixelRatio || 1;
+}
+
+// 将滚动条滚动至top
+export function scrollTop(element, top) {
+  if (!element) {
+    return;
+  }
+  Velocity(element, {
+    scrollTop: top
+  });
+  // const offset = -element.scrollTop + top;
+  // const opts = _.extend(
+  //   {
+  //     container: element,
+  //     duration: 300,
+  //     offset,
+  //   },
+  //   options,
+  // );
+  // Velocity(element, 'scroll', opts);
 }

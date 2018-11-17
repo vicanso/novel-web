@@ -337,7 +337,10 @@ export default {
         color: color.color
       });
       // 设置status bar的背景色
-      cordova.statusBarCall("backgroundColorByHexString", color.backgroundColor);
+      cordova.statusBarCall(
+        "backgroundColorByHexString",
+        color.backgroundColor
+      );
       const pages = fontMetrics.getFillTextList(chapter.content);
       this.maxPage = pages.length;
       let nextTips = "正在切换至下一章...";
@@ -414,10 +417,9 @@ export default {
     }
   },
   async mounted() {
-    this.backButtonEvent = () => {
+    this.offBackButtonEvent = cordova.onBackButton(() => {
       this.back();
-    };
-    cordova.on("backbutton", this.backButtonEvent);
+    });
     this.initPageContent();
     await this.$next();
     let chapterPage = 1;
@@ -435,7 +437,7 @@ export default {
   },
   beforeDestroy() {
     cordova.setStatusBarDefault();
-    cordova.removeListener("backbutton", this.backButtonEvent);
+    this.offBackButtonEvent();
     this.hammer.destroy();
   }
 };
