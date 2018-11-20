@@ -214,8 +214,7 @@ export default {
             translateX: [transX, currentX]
           },
           {
-            mobileHA: true,
-            duration: 400
+            duration: 300
           }
         );
       };

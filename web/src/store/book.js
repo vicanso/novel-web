@@ -15,6 +15,7 @@ import {
   BOOK_LIST_TODAY_RECOMMEND,
   BOOK_SEARCH_RESULT,
   BOOK_LIST_USER_FAV,
+  BOOK_LIST_BANNER,
   BOOK_LIST_LATEST_POPU
 } from "@/store/types";
 
@@ -34,6 +35,7 @@ var currentKeyword = "";
 
 const state = {
   book: {
+    banners: null,
     detail: null,
     list: null,
     count: 0,
@@ -363,7 +365,22 @@ const bookFavUpdate = async (tmp, { id, readingChapter, readingChapterNo }) => {
   });
 };
 
+// bookListBanner 获取banner推荐书籍
+const bookListBanner = async ({ commit }) => {
+  commit(BOOK_LIST_BANNER, [
+    {
+      img: "01CW2P1JZF2AA34564TZWRXGJA",
+      id: "80736"
+    },
+    {
+      img: "01CW2P2SGK7QBPJVHWMT7D8B7X",
+      id: "79675"
+    }
+  ]);
+};
+
 const actions = {
+  bookListBanner,
   bookGetDetail,
   bookList,
   bookCacheRemove,
@@ -430,6 +447,9 @@ const mutations = {
       }
       return item.updatedAt;
     }).reverse();
+  },
+  [BOOK_LIST_BANNER](state, data) {
+    state.book.banners = data;
   }
 };
 

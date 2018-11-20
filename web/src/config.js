@@ -11,4 +11,5 @@ export const target = window.CONFIG.target || "web";
 // default timeout
 export const timeout = 15 * 1000;
 
-export const tinyUrlPrefix = window.CONFIG.tinyUrlPrefix;
+export const tinyUrlPrefix =
+  window.CONFIG.tinyUrlPrefix || "https://tiny.aslant.site/api/images/v1";

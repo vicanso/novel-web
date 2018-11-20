@@ -22,6 +22,13 @@ export default {
   },
   computed: {
     ...mapState({
+      bookBanners: ({ book }) => book.banners,
+      bookBannerImages: ({ book }) => {
+        if (!book.banners) {
+          return null;
+        }
+        return book.banners.map(item => item.img);
+      },
       books: ({ book }) => book.list,
       bookCount: ({ book }) => book.count,
       bookCategories: ({ book }) => {
@@ -43,7 +50,6 @@ export default {
   },
   data() {
     return {
-      banners: null,
       functions,
       currentNav: functions.hot,
       currentCatgory: 0,
@@ -92,6 +98,7 @@ export default {
   },
   methods: {
     ...mapActions([
+      "bookListBanner",
       "bookList",
       "bookListCategory",
       "bookListTodayRecommend",
@@ -224,6 +231,14 @@ export default {
         return;
       }
       scrollTop(dom, 0);
+    },
+    // 显示广告推荐
+    showBanner(index) {
+      const item = this.bookBanners[index];
+      if (!item) {
+        return;
+      }
+      this.showDetail(item.id);
     }
   },
   watch: {
@@ -267,10 +282,7 @@ export default {
       await this.bookListCategory();
       this.fetch();
       this.initLoadmoreEvent();
-      this.banners = [
-        "01CW2P1JZF2AA34564TZWRXGJA",
-        "01CW2P2SGK7QBPJVHWMT7D8B7X"
-      ];
+      this.bookListBanner();
       // home页面一直都存在，不需要删除事件
       cordova.onStatusTap(() => {
         this.backToTop();

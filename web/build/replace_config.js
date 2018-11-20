@@ -8,8 +8,8 @@ const config = `
         window.CONFIG = {
           "target": "app",
           "env": "production",
-          "urlPrefix": "https://papanovel.com/@nv",
-          "tinyUrlPrefix": "https://tiny.papanovel.com/api/images/v1"
+          "urlPrefix": "https://aslant.site/@nv",
+          "tinyUrlPrefix": "https://tiny.aslant.site/api/images/v1"
         };
 `;
 html = html.replace(/\/\/ CONFIG START([\s\S]+)\/\/ CONFIG END/, config);

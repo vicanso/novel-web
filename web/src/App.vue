@@ -5,6 +5,7 @@
   )
   transition(
     v-if="ready"
+    @leave="leave"
   )
     router-view.childView(
       ref="childView"
@@ -13,10 +14,12 @@
 <style lang="sass" src="@/styles/app.sass"></style>
 
 <script>
-import Home from "@/views/Home";
 import Hammer from "hammerjs";
+import Velocity from "velocity-animate";
 import { MessageBox } from "mint-ui";
 import { mapActions, mapState } from "vuex";
+
+import Home from "@/views/Home";
 import cordova from "@/helpers/cordova";
 import router from "@/router";
 import { isAPP, getErrorMessage } from "@/helpers/util";
@@ -59,6 +62,27 @@ export default {
       "appSetSetting",
       "userRefresh"
     ]),
+    leave: function(el, done) {
+      let start = 0;
+      const { transform } = el.style;
+      if (transform) {
+        const result = /translate3d\((\d+)px[\s\S]+\)/.exec(transform);
+        if (result && result[1]) {
+          start = Number.parseInt(result[1]);
+        }
+      }
+      Velocity(
+        el,
+        {
+          translateZ: 0,
+          translateX: [el.clientWidth, start]
+        },
+        {
+          duration: 300,
+          complete: done
+        }
+      );
+    },
     refreshUserSession() {
       // 每5分钟刷新一次session ttl
       setInterval(() => {

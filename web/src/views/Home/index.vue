@@ -18,8 +18,9 @@ mixin MainNav
 mixin Banner
   .bannerWrapper
     Banner(
-      v-if="banners"
-      :ids="banners"
+      v-if="bookBannerImages"
+      :ids="bookBannerImages"
+      @view="showBanner"
     )
 mixin BookHot
   .hotWrapper.fullHeightScroll(
