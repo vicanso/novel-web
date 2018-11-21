@@ -78,7 +78,7 @@ export default {
           translateX: [el.clientWidth, start]
         },
         {
-          duration: 300,
+          duration: 200,
           complete: done
         }
       );
