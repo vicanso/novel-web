@@ -183,6 +183,14 @@ export default {
       } else {
         this.changePage(1);
       }
+    },
+    isShowingSetting(v) {
+      let c = "#f7f7f7";
+      if (!v) {
+        const { color } = this.getOptions();
+        c = color.backgroundColor;
+      }
+      cordova.statusBarCall("backgroundColorByHexString", c);
     }
   },
   methods: {
@@ -347,6 +355,7 @@ export default {
         color: color.color
       });
       // 设置status bar的背景色
+      cordova.statusBarCall("styleDefault");
       cordova.statusBarCall(
         "backgroundColorByHexString",
         color.backgroundColor
