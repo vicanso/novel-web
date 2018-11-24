@@ -29,6 +29,14 @@ const router = new Router({
   ]
 });
 
+function addPageView(url) {
+  const h = window._hmt;
+  if (!h) {
+    return;
+  }
+  h.push(["_trackPageview", url]);
+}
+
 let pageLoadStats = null;
 router.beforeEach((to, from, next) => {
   pageLoadStats = {
@@ -37,6 +45,7 @@ router.beforeEach((to, from, next) => {
     from: from.path,
     startedAt: Date.now()
   };
+  addPageView(to.fullPath);
   next();
 });
 
