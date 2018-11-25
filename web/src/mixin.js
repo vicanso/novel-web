@@ -28,12 +28,16 @@ export const LeftSideDragMixin = {
       if (!draggingBack) {
         return;
       }
+      let dom = $el;
+      if (this.getDragDom) {
+        dom = this.getDragDom();
+      }
       if (type === "panend") {
         draggingBack = false;
         // 如果拖动距离较短，则认为非返回操作
         if (deltaX < offsetMove) {
-          $el.style.transform = "";
-          $el.style.opacity = 1;
+          dom.style.transform = "";
+          dom.style.opacity = 1;
           return;
         }
         // 如果有自定义的结束处理
@@ -41,10 +45,6 @@ export const LeftSideDragMixin = {
           this.leftSideDragEnd();
           return;
         }
-      }
-      let dom = $el;
-      if (this.getDragDom) {
-        dom = this.getDragDom();
       }
       // 透明度
       const opacity = Math.max(1 - x / 150, 0.95);
