@@ -449,10 +449,6 @@ export default {
     this.initEvent();
     settingFunctionsArea.bottom =
       this.$el.clientHeight - settingFunctionsArea.footerHeight;
-    // 设置左侧不可拖动返回
-    this.appSetSetting({
-      leftSideDragBack: false
-    });
   },
   beforeDestroy() {
     cordova.setStatusBarDefault();

@@ -7,6 +7,8 @@ import { getCover, formatDate, waitfor } from "@/helpers/util";
 import { routeDetail, routeHome, routeLogin } from "@/routes";
 import cordova from "@/helpers/cordova";
 
+import { LeftSideDragMixin } from "@/mixin";
+
 const sectionChapterCount = 100;
 const readChapterView = "readChapter";
 const mainView = "main";
@@ -16,6 +18,8 @@ export default {
   name: "detail",
   data() {
     return {
+      // 禁用左拖动返回
+      leftSideDragDisabled: false,
       id: "",
       view: mainView,
       prevView: "",
@@ -52,6 +56,7 @@ export default {
     BookView,
     ChapterContentView
   },
+  mixins: [LeftSideDragMixin],
   computed: {
     ...mapState({
       readChapterViewStyle: ({ user }) => {
@@ -96,10 +101,11 @@ export default {
       if (v !== readChapterView) {
         // 清除数据
         this.currentChapter = null;
-        this.enableLeftSideDrag();
+        this.leftSideDragDisabled = false;
       }
       // 如果是章节内容阅读，则不记录
       if (v === readChapterView) {
+        this.leftSideDragDisabled = true;
         return;
       }
       this.prevView = v;
@@ -255,14 +261,7 @@ export default {
       this.currentChapters = null;
       this.recommendBooks = null;
     },
-    enableLeftSideDrag() {
-      // 设置左侧可返回
-      this.appSetSetting({
-        leftSideDragBack: true
-      });
-    },
     async init(id) {
-      this.enableLeftSideDrag();
       this.reset();
       this.id = id;
       const data = await this.bookGetReadInfo({
@@ -433,6 +432,11 @@ export default {
         found = id === item.id;
       });
       return found;
+    },
+    leftSideDragEnd() {
+      this.$router.replace({
+        path: "/"
+      });
     }
   },
   beforeMount() {

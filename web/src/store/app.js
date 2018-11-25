@@ -1,9 +1,7 @@
 import { APP_SETTING } from "@/store/types";
 
 const state = {
-  app: {
-    leftSideDragBack: false
-  }
+  app: {}
 };
 
 const appSetSetting = async ({ commit }, data) => {

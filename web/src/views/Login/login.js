@@ -2,8 +2,11 @@ import { mapActions, mapState } from "vuex";
 
 import cordova from "@/helpers/cordova";
 
+import { LeftSideDragMixin } from "@/mixin";
+
 export default {
   name: "login",
+  mixins: [LeftSideDragMixin],
   data() {
     return {
       account: "",
@@ -38,16 +41,15 @@ export default {
     },
     back() {
       this.$router.back();
+    },
+    leftSideDragEnd() {
+      this.back();
     }
   },
   beforeDestroy() {
     this.offBackButtonEvent();
   },
   mounted() {
-    // 设置左侧可返回
-    this.appSetSetting({
-      leftSideDragBack: true
-    });
     const fn = () => {
       this.back();
     };
