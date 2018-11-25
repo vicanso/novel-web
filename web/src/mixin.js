@@ -1,7 +1,11 @@
 import Hammer from "hammerjs";
+import { isAPP } from "@/helpers/util";
 
 export const LeftSideDragMixin = {
   mounted() {
+    if (!isAPP()) {
+      return;
+    }
     const { $el } = this;
     const hammer = new Hammer($el, {
       direction: Hammer.DIRECTION_HORIZONTAL,
@@ -50,6 +54,9 @@ export const LeftSideDragMixin = {
     this.hammer = hammer;
   },
   beforeDestroy() {
+    if (!this.hammer) {
+      return;
+    }
     this.hammer.destroy();
   }
 };
