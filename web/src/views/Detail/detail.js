@@ -433,7 +433,19 @@ export default {
       });
       return found;
     },
+    getDragDom() {
+      const { view } = this;
+      if (view === chaptersView) {
+        return this.$refs.chapters;
+      }
+      return this.$el;
+    },
     leftSideDragEnd() {
+      const { view } = this;
+      if (view !== mainView) {
+        this.back();
+        return;
+      }
       this.$router.replace({
         path: "/"
       });

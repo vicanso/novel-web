@@ -38,10 +38,14 @@ export const LeftSideDragMixin = {
           return;
         }
       }
+      let dom = $el;
+      if (this.getDragDom) {
+        dom = this.getDragDom();
+      }
       // 透明度
       const opacity = Math.max(1 - x / 150, 0.95);
-      $el.style.transform = `translate3d(${x}px, 0px, 0px)`;
-      $el.style.opacity = opacity;
+      dom.style.transform = `translate3d(${x}px, 0px, 0px)`;
+      dom.style.opacity = opacity;
     });
     this.hammer = hammer;
   },

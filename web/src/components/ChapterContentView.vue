@@ -125,6 +125,7 @@ import Velocity from "velocity-animate";
 import { forEach } from "lodash";
 import { getFontMetrics } from "@/helpers/util";
 import cordova from "@/helpers/cordova";
+import { LeftSideDragMixin } from "@/mixin";
 
 // 内容展示的padding
 const padding = 15;
@@ -157,8 +158,11 @@ export default {
       type: Number
     }
   },
+  mixins: [LeftSideDragMixin],
   data() {
     return {
+      // 禁用左拖动返回
+      leftSideDragDisabled: true,
       pages: null,
       currentPage: 0,
       maxPage: 0,
@@ -186,9 +190,13 @@ export default {
     },
     isShowingSetting(v) {
       let c = "#f7f7f7";
+      // 非显示设置页面
       if (!v) {
         const { color } = this.getOptions();
         c = color.backgroundColor;
+        this.leftSideDragDisabled = true;
+      } else {
+        this.leftSideDragDisabled = false;
       }
       cordova.statusBarCall("backgroundColorByHexString", c);
     }
@@ -433,6 +441,12 @@ export default {
     },
     refresh() {
       this.checkToChangeChapter(this.currentPage);
+    },
+    getDragDom() {
+      return this.$el.parentElement;
+    },
+    leftSideDragEnd() {
+      this.back();
     }
   },
   async mounted() {

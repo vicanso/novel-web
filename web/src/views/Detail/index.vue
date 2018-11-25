@@ -166,18 +166,17 @@ mixin ReadChapterView
     )
 
 .detailWrapper.fullHeight
-  .fullHeight(
-    v-show="view === 'chapters'"
+  .fullHeight.mainView
+    +MainView
+  .fullHeight.chaptersView(
+    ref="chapters"
+    v-if="view === 'chapters'"
   )
     +ChaptersView
-  .fullHeight(
+  .fullHeight.readChapterView(
     v-if="view === 'readChapter'"
   )
     +ReadChapterView
-  .fullHeight.mainView(
-    v-show="view === 'main'"
-  )
-    +MainView
 </template>
 
 <script src="./detail.js">

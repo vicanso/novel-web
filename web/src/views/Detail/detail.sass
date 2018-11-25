@@ -1,9 +1,14 @@
 @import '@/styles/const.sass'
 
 
-.mainView
+.mainView, .chaptersView
+  background-color: $COLOR_DARY_WHITE
   .refresh
     font-weight: 600
+.chaptersView, .readChapterView
+  position: relative
+  z-index: 9
+
 .contentWrapper
   padding-bottom: $MAIN_HEADER_HEIGHT
   padding-top: $MAIN_HEADER_HEIGHT
