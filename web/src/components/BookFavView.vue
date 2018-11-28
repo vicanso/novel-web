@@ -15,12 +15,12 @@
       span.updatedAt.font12(
         v-if="latestUpdatedAt"
       ) (更新于:{{latestUpdatedAt}})
-    .readingChapter(
-      v-if="readingChapter"
-    ) 上次阅读：{{readingChapter.title}}
     .latestChapter(
       v-if="latestChapter"
     ) 最新章节：{{latestChapter.title}}
+    .readingChapter(
+      v-if="readingChapter"
+    ) 上次阅读：{{readingChapter.title}}
 
 </template>
 <style lang="sass" scoped>
