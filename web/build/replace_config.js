@@ -8,7 +8,7 @@ const config = `
         window.CONFIG = {
           "target": "app",
           "env": "production",
-          "urlPrefix": "https://aslant.site/@nv",
+          "urlPrefix": "https://xs.aslant.site/@nv",
           "tinyUrlPrefix": "https://tiny.aslant.site/api/images/v1"
         };
 `;

@@ -368,7 +368,7 @@ export default {
         "backgroundColorByHexString",
         color.backgroundColor
       );
-      const pages = fontMetrics.getFillTextList(chapter.content);
+      const pages = fontMetrics.getFillTextList(chapter.content.trim());
       this.maxPage = pages.length;
       let nextTips = "正在切换至下一章...";
       if (this.chapterNo >= this.chapterCount - 1) {

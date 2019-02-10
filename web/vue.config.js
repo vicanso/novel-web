@@ -8,7 +8,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/@nv": {
-        target: "https://aslant.site",
+        target: "https://xs.aslant.site",
         changeOrigin: true
       }
     }
